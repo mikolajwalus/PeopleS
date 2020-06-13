@@ -1,32 +1,28 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">PeopleS</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+  <a class="navbar-brand" href="#"><h2><i class="fa fa-users"></i>  PeopleS</h2></a>
 
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#" >Disabled</a>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="dropdown01">Dropdown</a>
-        <div class="dropdown-menu">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
-      </li>
-    </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="text" placeholder="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    <div class="mr-auto"></div>
+    <form class="form-inline my-2 my-lg-0" *ngIf="!logged">
+      <input class="form-control mr-sm-2" type="text" placeholder="Name" [(ngModel)]="model.Name" name="Name">
+      <input class="form-control mr-sm-2" type="password" placeholder="Password" [(ngModel)]="model.Password" name="Password">
+      <button class="btn btn-primary my-2 my-sm-0" type="submit" (click)="login()">Login</button>
     </form>
   </div>
+
+  <div class="inline my-2 my-lg-0"*ngIf="logged">
+    <div class="btn-group" dropdown>
+      <button id="button-animated" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
+              aria-controls="dropdown-animated"><span class="caret"></span>
+      </button>
+      <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu dropdown-menu-right"
+          role="menu" aria-labelledby="button-animated">
+        <li role="menuitem"><a class="dropdown-item" href="#">Action</a></li>
+        <li role="menuitem"><a class="dropdown-item" href="#">Another action</a>
+        </li>
+        <li role="menuitem"><a class="dropdown-item" (click)="logout()">Logout</a></li>
+      </ul>
+    </div>
+  </div>
+
 </nav>
