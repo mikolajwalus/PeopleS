@@ -27,9 +27,9 @@ namespace PeopleS.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserForRegisterDto user)
         {
-            if ( await _repo.UserExists(user.Name.ToLower()) ) return BadRequest("This user already exists!");
+            if ( await _repo.UserExists(user.Email.ToLower()) ) return BadRequest("This user already exists!");
 
-            var userForReturn = await _repo.Register(user.Name, user.Password);
+            var userForReturn = await _repo.Register(user.Email, user.Password);
 
             return Ok(userForReturn);
         }
@@ -37,13 +37,13 @@ namespace PeopleS.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserForLoginDto user)
         {
-            var userFromRepo = await _repo.Login(user.Name, user.Password);
+            var userFromRepo = await _repo.Login(user.Email, user.Password);
 
-            if (userFromRepo == null) return BadRequest();
+            if (userFromRepo == null) return Unauthorized();
 
             var claims = new[] {
                 new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
-                new Claim(ClaimTypes.Name, userFromRepo.Name)
+                new Claim(ClaimTypes.Email, userFromRepo.Email)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.

@@ -19,9 +19,9 @@ namespace PeopleS.API.Data
             _context = context;
         }
 
-        public async Task<User> Login(string name, string password)
+        public async Task<User> Login(string email, string password)
         {
-            User user = await _context.Users.Where(p => p.Name == name.ToLower()).FirstOrDefaultAsync();
+            User user = await _context.Users.Where(p => p.Email == email.ToLower()).FirstOrDefaultAsync();
 
             if(user == null) return null;
 
@@ -40,7 +40,7 @@ namespace PeopleS.API.Data
             }
         }
 
-        public async Task<User> Register(string name, string password)
+        public async Task<User> Register(string email, string password)
         {
             byte[] passwordHash;
             byte[] passwordSalt;
@@ -49,7 +49,7 @@ namespace PeopleS.API.Data
 
             User user = new User()
             {
-                Name = name.ToLower(),
+                Email = email.ToLower(),
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
             };
@@ -69,9 +69,9 @@ namespace PeopleS.API.Data
             }
         }
 
-        public async Task<bool> UserExists(string name)
+        public async Task<bool> UserExists(string email)
         {
-            var user = await _context.Users.Where(p => p.Name == name).FirstOrDefaultAsync();
+            var user = await _context.Users.Where(p => p.Email == email).FirstOrDefaultAsync();
 
             if (user == null) return false;
 

@@ -1,0 +1,26 @@
+<div class="container-fluid">
+  <div class="row justify-content-center mt-5">
+      <h1 class="display-3"><i class="fa fa-users"></i>  PeopleS, the most popular social portal</h1>
+  </div>
+
+  <div class="row justify-content-center mt-5">
+    <form class="justify-content-center">
+      <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" [(ngModel)]="loginModel.Email" name="Email">
+      </div>
+      <div class="form-group">
+        <label for="Password">Password</label>
+        <input type="password" class="form-control" id="Password" placeholder="Password" [(ngModel)]="loginModel.Password" name="Password">
+      </div>
+      
+      <div>
+        <button type="submit" class="btn btn-primary btn-block" (click)="login()">Log In</button>
+      </div>
+      <div class="mt-1 justify-content-center">
+        <small class="form-text text-muted text-center">Don't have account yet? Register yourself now!</small>
+        <a routerLink='/register'><button type="button" class="btn btn-warning btn-block">Register</button></a>
+      </div>
+    </form>
+  </div>
+</div>+

@@ -1,30 +1,32 @@
 import { Component, OnInit } from '@angular/core';
-import { map } from 'rxjs/operators';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../_services/auth.service';
-import { BsDropdownConfig } from 'ngx-bootstrap/dropdown';
+import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { ThrowStmt } from '@angular/compiler';
 import { AlertifyService } from '../_services/alertify.service';
 
 @Component({
-  selector: 'app-nav',
-  templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.css'],
-  providers: [{ provide: BsDropdownConfig, useValue: { isAnimated: true, autoClose: true } }]
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
 })
-export class NavComponent implements OnInit {
-  model: any = {};
+export class LoginComponent implements OnInit {
+  loginModel: any = {};
   user: any = {};
   logged: boolean;
 
-  constructor(private authService: AuthService, private router: Router, private alertifyService: AlertifyService) { }
+  constructor(private authService: AuthService,
+              private fb: FormBuilder,
+              private router: Router,
+              private alertifyService: AlertifyService) { }
 
   ngOnInit() {
     this.authService.isLoggedIn$.subscribe(status => this.logged = status);
   }
 
   login() {
-    console.log(this.model);
-    this.authService.login(this.model)
+    this.authService.login(this.loginModel)
     .pipe( map( (response: any) => {
       this.user = JSON.parse(JSON.stringify(response.user));
     } )
@@ -33,16 +35,9 @@ export class NavComponent implements OnInit {
       this.authService.succesfullLoggedIn();
       this.router.navigate(['home']);
       this.alertifyService.success('Logged in successfully');
-    },
-    error => {
+    }, error => {
       this.alertifyService.error('Incorrect login or password');
     });
   }
 
-  logout() {
-    this.authService.logout();
-    this.user = {};
-    this.model = {};
-    this.alertifyService.success('Succesfully logged out');
-  }
 }

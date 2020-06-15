@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import {JwtHelperService, JwtModule} from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -10,10 +12,11 @@ import { BehaviorSubject } from 'rxjs';
 export class AuthService {
 baseUrl = environment.apiUrl;
 token: any;
-private loggedIn = new BehaviorSubject<boolean>(false);
+jwtHelper = new JwtHelperService();
+private loggedIn = new BehaviorSubject<boolean>(this.isLoggedIn());
 public isLoggedIn$ = this.loggedIn.asObservable();
 
-constructor(private http: HttpClient) { }
+constructor(private http: HttpClient, private router: Router) { }
 
 login(model: any) {
   return this.http.post( this.baseUrl + 'auth/login', model )
@@ -28,10 +31,20 @@ login(model: any) {
 logout() {
   localStorage.removeItem('token');
   this.loggedIn.next(false);
+  this.router.navigate(['login']);
 }
 
 succesfullLoggedIn() {
   this.loggedIn.next(true);
+}
+
+register(model: any) {
+  return this.http.post(this.baseUrl + 'auth/register', model);
+}
+
+isLoggedIn() {
+  const token = localStorage.getItem('token');
+  return !this.jwtHelper.isTokenExpired( token );
 }
 
 }
