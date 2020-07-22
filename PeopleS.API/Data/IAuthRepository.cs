@@ -8,5 +8,6 @@ namespace PeopleS.API.Data
         Task<User> Register(string email, string password);
         Task<User> Login(string email, string password);
         Task<bool> UserExists(string email);
+        Task<bool> ChangePassword(int id, string oldPassword, string newPassword);
     }
 }

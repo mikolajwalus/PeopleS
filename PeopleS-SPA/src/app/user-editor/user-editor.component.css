@@ -1,0 +1,9 @@
+.nav-item span{
+   cursor: pointer; 
+   color: #007bff;
+}
+
+.nav-item span:hover{
+    text-decoration: underline;
+    color: #013164;
+ }

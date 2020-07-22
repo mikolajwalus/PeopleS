@@ -3,7 +3,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../_services/auth.service';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { ThrowStmt } from '@angular/compiler';
 import { AlertifyService } from '../_services/alertify.service';
 
 @Component({

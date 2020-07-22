@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,6 +33,7 @@ namespace PeopleS.API
         {
             services.AddControllers();
             services.AddDbContext<DataContext>( options => options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddAutoMapper(typeof(Startup));
             services.AddCors();
             services.AddScoped<IPeopleSRepository, PeopleSRepository>();
             services.AddScoped<IAuthRepository, AuthRepository>();

@@ -35,7 +35,7 @@ namespace PeopleS.API.Controllers
         {
             if(value != null) _repo.Add(value);
 
-            if(await _repo.SaveAll() > 0) return Ok(value);
+            if(await _repo.SaveAll()) return Ok(value);
 
             return BadRequest();
         }

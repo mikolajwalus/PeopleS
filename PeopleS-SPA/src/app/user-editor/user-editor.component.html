@@ -1,0 +1,223 @@
+<div class="container-fluid mt-5">
+<div class="container">
+<div class="row flex-lg-nowrap">
+  <div class="col-12 col-lg-auto mb-3" style="width: 200px;">
+    <div class="card p-3">
+      <div class="e-navlist e-navlist--active-bg">
+        <ul class="nav">
+          <li class="nav-item"><a class="nav-link px-2 active" (click)="toMain()"><span>Main informations</span></a></li>
+          <li class="nav-item"><a class="nav-link px-2 active" (click)="toChangePassword()"><span>Change Password</span></a></li>
+          <li class="nav-item"><a class="nav-link px-2 active" (click)="toChangeDate()"><span>Change date of birth</span></a></li>
+          <li class="nav-item"><a class="nav-link px-2 active" (click)="toMoreInformations()"><span>More personal informations</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="row">
+      <div class="col mb-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="e-profile">
+              <div class="row">
+                <div class="col-12 col-sm-auto mb-3">
+                  <div class="mx-auto" style="width: 140px;">
+                    <div class="d-flex justify-content-center align-items-center rounded" style="height: 140px; background-color: rgb(233, 236, 239);">
+                      <span style="color: rgb(166, 168, 170); font: bold 8pt Arial;">140x140</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col d-flex flex-column flex-sm-row justify-content-between mb-3">
+                  <div class="text-center text-sm-left mb-2 mb-sm-0">
+                    <h4 class="pt-sm-2 pb-1 mb-0 text-nowrap">{{user.name}} {{user.surname}}</h4>
+                    <p class="mb-0">{{user.email}}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-content pt-3">
+                <div class="tab-pane active">
+                  <form class="form" [formGroup]="emailForm">
+                    <div class="row" id="main">
+                      <div class="col mb-4">
+                        <div class="row">
+                          <div class="col">
+                              <label>Email</label>
+                            <div class="row">
+                              <div class="col">
+                                <div class="form-group">
+                                  <input class="form-control" type="text" placeholder="user@example.com" formControlName="email">
+                                </div>
+                              </div>
+                              <div class="col">
+                                <button class="btn btn-primary">Change Email</button>
+                              </div>
+                            </div>
+                            <div class="row" *ngIf="emailForm.dirty">
+                              <div class="alert alert-info col text-center">
+                                <p class="mb-0">You've changed the email. Click button to apply</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                  <form class="form" [formGroup]="passwordForm">
+                    <div class="row" id="password">
+                      <div class="col-12 col-sm-6 mb-3">
+                        <div class="mb-2"><b>Change Password</b></div>
+                        <div class="row">
+                          <div class="col">
+                            <div class="form-group">
+                              <label>Current Password</label>
+                              <input class="form-control" type="password" placeholder="••••••" formControlName="oldPassword">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <div class="form-group">
+                              <label>New Password</label>
+                              <input class="form-control" type="password" placeholder="••••••" formControlName="password">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <div class="form-group">
+                              <label>Confirm <span class="d-none d-xl-inline">Password</span></label>
+                              <input class="form-control" type="password" placeholder="••••••" formControlName="confirmPassword"></div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col d-flex justify-content-end">
+                            <button class="btn btn-primary" type="submit" [disabled]="!passwordForm.valid" (click)="changePassword()" >Change Password</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row" *ngIf="passwordForm.dirty">
+                      <div class="alert alert-info col mt-3 text-center">
+                        <p class="mb-0">Confirm changes to apply new password</p>
+                      </div>
+                    </div>
+                  </form>
+                  <form class="form" [formGroup]="dateForm">
+                    <div class="row">
+                      <div class="col-12 col-sm-6 mb-3" id="date">
+                        <div class="mb-2"><b>Change date of birth</b></div>
+                        <div class="row">
+                          <div class="col d-flex justify-content-start">
+                            <input type="text" 
+                            class="form-control mb-3" 
+                            placeholder="Datepicker" 
+                            [bsConfig]="bsConfig" 
+                            bsDatepicker 
+                            formControlName="dateOfBirth" />
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col d-flex justify-content-end">
+                            <button class="btn btn-primary mt-3" type="submit" [disabled]="!dateForm.valid" (click)="changeDateOfBirth()" >Change date of birth</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row" *ngIf="dateForm.dirty">
+                      <div class="alert alert-info col mt-3 text-center">
+                        <p class="mb-0">Confirm changes to apply new date of birth</p>
+                      </div>
+                    </div>
+                  </form>
+                  <form class="form" [formGroup]="profileForm">
+                    <div class="row" id="moreInfo">
+                        <div class="col">
+                            <div class="mb-2"><b>More personal informations</b></div>
+                            <div class="row">
+                              <div class="col">
+                                <div class="form-group">
+                                  <label>Name</label>
+                                  <input class="form-control" type="text" name="name" placeholder="Name" formControlName="name">
+                                </div>
+                              </div>
+                              <div class="col">
+                                <div class="form-group">
+                                  <label>Surname</label>
+                                  <input class="form-control" type="text" name="surname" placeholder="Surname" formControlName="surname">
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col">
+                                <div class="form-group">
+                                  <label>City</label>
+                                  <input class="form-control" type="text" placeholder="City" formControlName="city">
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col mb-3">
+                                <div class="form-group">
+                                  <label>About me</label>
+                                  <textarea class="form-control" rows="5" placeholder="Our greatest glory is not never falling..." formControlName="aboutMe"></textarea>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                  <div class="form-group">
+                                    <label>Country</label>
+                                    <input class="form-control" type="text" placeholder="Country" formControlName="country">
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col">
+                                  <div class="form-group">
+                                    <label>Company</label>
+                                    <input class="form-control" type="text" placeholder="Company" formControlName="company">
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col">
+                                  <div class="form-group">
+                                    <label>School</label>
+                                    <input class="form-control" type="text" placeholder="School" formControlName="school">
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col mb-3">
+                                  <div class="form-group">
+                                    <label>My Interests</label>
+                                    <textarea class="form-control" rows="5" placeholder="My interests" formControlName="myInterests"></textarea>
+                                  </div>
+                                </div>
+                              </div>
+                        </div>
+                      </div>
+                    <div class="row">
+                      <div class="col d-flex justify-content-end">
+                        <button class="btn btn-primary" type="submit" [disabled]="!profileForm.valid" (click)="saveChanges()" >Save Changes</button>
+                      </div>
+                    </div>
+                    <div class="row" *ngIf="profileForm.dirty">
+                      <div class="alert alert-info col mt-3 text-center">
+                        <p class="mb-0">Confirm changes to apply</p>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+</div>

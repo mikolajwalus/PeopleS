@@ -3,21 +3,24 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { JwtModule } from '@auth0/angular-jwt';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ValuesService } from './_services/values.service';
 import { ValueComponent } from './value/value.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavComponent } from './nav/nav.component';
-import { AuthService } from './_services/auth.service';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { AuthGuard } from './_guards/AuthGuard';
 import { LoggedGuard } from './_guards/logged.guard';
-import { JwtModule } from '@auth0/angular-jwt';
 import { AlertifyService } from './_services/alertify.service';
+import { UserEditorComponent } from './user-editor/user-editor.component';
+import { UserService } from './_services/user.service';
+import { AuthService } from './_services/auth.service';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -30,7 +33,8 @@ export function tokenGetter() {
       NavComponent,
       HomeComponent,
       LoginComponent,
-      RegisterComponent
+      RegisterComponent,
+      UserEditorComponent
    ],
    imports: [
       BrowserModule,
@@ -38,7 +42,7 @@ export function tokenGetter() {
       FormsModule,
       HttpClientModule,
       BrowserAnimationsModule,
-      BrowserAnimationsModule,
+      BsDatepickerModule.forRoot(),
       BsDropdownModule.forRoot(),
       ReactiveFormsModule,
       JwtModule.forRoot({
@@ -50,9 +54,10 @@ export function tokenGetter() {
       })
    ],
    providers: [
-      ValuesService,
       AuthService,
+      ValuesService,
       AlertifyService,
+      UserService,
       AuthGuard,
       LoggedGuard
    ],

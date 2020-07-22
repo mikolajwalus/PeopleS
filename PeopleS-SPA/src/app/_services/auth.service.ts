@@ -7,11 +7,11 @@ import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
+
 export class AuthService {
 baseUrl = environment.apiUrl;
-token: any;
 jwtHelper = new JwtHelperService();
 private loggedIn = new BehaviorSubject<boolean>(this.isLoggedIn());
 public isLoggedIn$ = this.loggedIn.asObservable();
@@ -45,6 +45,10 @@ register(model: any) {
 isLoggedIn() {
   const token = localStorage.getItem('token');
   return !this.jwtHelper.isTokenExpired( token );
+}
+
+getToken() {
+  return  this.jwtHelper.decodeToken( localStorage.getItem( 'token' ) );
 }
 
 }

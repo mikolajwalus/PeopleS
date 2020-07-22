@@ -77,5 +77,26 @@ namespace PeopleS.API.Data
 
             return true;
         }
+
+        public async Task<bool> ChangePassword(int id, string oldPassword, string newPassword)
+        {
+            var user = await _context.Users.Where(p => p.Id == id).FirstOrDefaultAsync();
+
+            if(user == null) return false;
+
+            if( Login(user.Email, oldPassword) == null) return false;
+            
+            byte[] passwordHash;
+            byte[] passwordSalt;
+
+            CreatePasswordHash(newPassword, out passwordHash, out passwordSalt);
+
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+
+            await _context.SaveChangesAsync();
+            
+            return true;
+        }
     }
 }

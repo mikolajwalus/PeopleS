@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using PeopleS.API.Helpers;
 using PeopleS.API.Models;
 
 namespace PeopleS.API.Data
@@ -23,6 +25,11 @@ namespace PeopleS.API.Data
             _context.Remove(entity);
         }
 
+        public async Task<User> GetUser(int id)
+        {
+            return await _context.Users.FirstOrDefaultAsync( x => x.Id == id);
+        }
+
         public async Task<Value> GetValue(int id)
         {
             return await _context.Values.FirstOrDefaultAsync( x => x.Id == id);
@@ -33,9 +40,18 @@ namespace PeopleS.API.Data
             return await _context.Values.ToListAsync();
         }
 
-        public async Task<int> SaveAll()
+        public async Task<PagedList<Post>> GetUserPosts( PostParams postParams )
         {
-            return await _context.SaveChangesAsync();
+            var posts = _context.Posts.Where( x => x.UserId == postParams.SenderId).OrderByDescending( x => x.DateOfCreation);
+
+            return await PagedList<Post>.CreateAsync(posts, postParams.PageNumber);
+        }
+
+        public async Task<bool> SaveAll()
+        {
+            if( await _context.SaveChangesAsync() > 0)return true;
+
+            return false;
         }
     }
 }

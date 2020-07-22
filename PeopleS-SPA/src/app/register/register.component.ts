@@ -8,7 +8,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-  loginModel: any = {};
   registerModel: any = {};
   registerForm: FormGroup;
   user: any = {};

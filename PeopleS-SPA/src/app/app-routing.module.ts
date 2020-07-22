@@ -5,12 +5,15 @@ import { RegisterComponent } from './register/register.component';
 import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './_guards/AuthGuard';
 import { LoggedGuard } from './_guards/logged.guard';
+import { UserEditorComponent } from './user-editor/user-editor.component';
+import { UserEditor } from './_resolvers/user-editor.resolver';
 
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [LoggedGuard] },
   { path: 'register', component: RegisterComponent, canActivate: [LoggedGuard] },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'edit-profile', component: UserEditorComponent, resolve: {user: UserEditor} , canActivate: [AuthGuard] },
   { path: '',   redirectTo: '/login', pathMatch: 'full' },
   {path: '**', redirectTo: '/login', pathMatch: 'full'},
 ];

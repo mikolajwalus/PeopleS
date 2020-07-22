@@ -1,16 +1,14 @@
 using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
-namespace PeopleS.API.Models
+namespace PeopleS.API.Dtos
 {
-    public class User
+    public class UserDetailedDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Email { get; set; }
-        public byte[] PasswordHash { get; set; }
-        public byte[] PasswordSalt { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
@@ -18,6 +16,5 @@ namespace PeopleS.API.Models
         public string School { get; set; }
         public string AboutMe { get; set; }
         public string MyInterests { get; set; }
-        public ICollection<Post> Posts { get; set; }    
     }
 }
