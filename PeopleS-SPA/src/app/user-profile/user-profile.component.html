@@ -1,0 +1,54 @@
+<!-- <div class="col-md-4 p-2" *ngFor="let post of allpost">
+     
+
+    <div
+    class="search-results"
+    infiniteScroll
+    [infiniteScrollDistance]="2"
+    [infiniteScrollThrottle]="50"
+    (scrolled)="onScroll()"
+    >
+    <div class="row pt-5">
+        
+    <div class="col-md-4 p-2" *ngFor="let post of allpost">
+
+        <div class="card shadow">
+        <div class="card-body">
+            <h5 class="card-title text-center ">{{post.name}} {{post.id}}</h5>
+            <p class="card-text">{{post.dis}}</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+        </div>
+
+        </div>
+    
+    </div>
+    
+    </div>
+
+</div> -->
+
+<div class="container-fluid">
+    <div
+    class="search-results"
+    infiniteScroll
+    [infiniteScrollDistance]="2"
+    [infiniteScrollThrottle]="50"
+    (scrolled)="onScroll()"
+    >
+        <div class="row d-flex justify-content-center">
+            <div class="col-8" *ngFor="let post of allpost">
+            
+                <div class="card shadow my-4">
+                <div class="card-body">
+                    <h5 class="card-title text-center ">{{post.dateOfCreation | date}} {{post.id}} {{post.user.name}}</h5>
+                    <p class="card-text">{{post.text}}</p>
+                </div>
+                <img class="card-img-top" src="{{post.photo}}" alt="img">
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>

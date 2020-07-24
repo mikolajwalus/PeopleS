@@ -6,6 +6,8 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { JwtModule } from '@auth0/angular-jwt';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -21,6 +23,7 @@ import { AlertifyService } from './_services/alertify.service';
 import { UserEditorComponent } from './user-editor/user-editor.component';
 import { UserService } from './_services/user.service';
 import { AuthService } from './_services/auth.service';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -34,7 +37,8 @@ export function tokenGetter() {
       HomeComponent,
       LoginComponent,
       RegisterComponent,
-      UserEditorComponent
+      UserEditorComponent,
+      UserProfileComponent
    ],
    imports: [
       BrowserModule,
@@ -51,7 +55,9 @@ export function tokenGetter() {
             whitelistedDomains: ['localhost:5000'],
             blacklistedRoutes: ['localhost:5000/api/auth']
          }
-      })
+      }),
+      InfiniteScrollModule,
+      NgxSpinnerModule,
    ],
    providers: [
       AuthService,

@@ -42,8 +42,10 @@ namespace PeopleS.API.Data
 
         public async Task<PagedList<Post>> GetUserPosts( PostParams postParams )
         {
-            var posts = _context.Posts.Where( x => x.UserId == postParams.SenderId).OrderByDescending( x => x.DateOfCreation);
-
+            var posts = _context.Posts
+                            .Where( x => x.UserId == postParams.SenderId)
+                            .OrderByDescending( x => x.DateOfCreation)
+                            .Include(x => x.User);
             return await PagedList<Post>.CreateAsync(posts, postParams.PageNumber);
         }
 

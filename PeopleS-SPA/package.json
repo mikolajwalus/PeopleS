@@ -25,6 +25,7 @@
     "font-awesome": "^4.7.0",
     "ngx-bootstrap": "^5.6.1",
     "ngx-infinite-scroll": "^9.0.0",
+    "ngx-spinner": "^10.0.1",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"

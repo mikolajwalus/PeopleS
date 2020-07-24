@@ -7,6 +7,8 @@ import { AuthGuard } from './_guards/AuthGuard';
 import { LoggedGuard } from './_guards/logged.guard';
 import { UserEditorComponent } from './user-editor/user-editor.component';
 import { UserEditor } from './_resolvers/user-editor.resolver';
+import { UserProfileComponent } from './user-profile/user-profile.component';
+import { UserProfile } from './_resolvers/user-profile.resolver';
 
 
 const routes: Routes = [
@@ -14,6 +16,7 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent, canActivate: [LoggedGuard] },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'edit-profile', component: UserEditorComponent, resolve: {user: UserEditor} , canActivate: [AuthGuard] },
+  { path: 'profile', component: UserProfileComponent, resolve: {userprofile: UserProfile}, canActivate: [AuthGuard] },
   { path: '',   redirectTo: '/login', pathMatch: 'full' },
   {path: '**', redirectTo: '/login', pathMatch: 'full'},
 ];

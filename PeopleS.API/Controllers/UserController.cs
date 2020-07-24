@@ -112,9 +112,11 @@ namespace PeopleS.API.Controllers
 
             var posts = await _repo.GetUserPosts(postParams);
 
+            var response = _mapper.Map<PostDto[]>(posts);
+
             Response.AddPagination(posts.CurrentPage, posts.PageSize, posts.TotalCount, posts.TotalPages);
 
-            return Ok(posts);
+            return Ok(response);
         }
     }
 }

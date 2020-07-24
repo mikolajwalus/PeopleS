@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaderResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaderResponse, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { User } from '../_models/User';
 
@@ -26,5 +26,14 @@ export class UserService {
 
   changeDate(id: number, model: any) {
     return this.http.put(this.baseUrl + 'users/' + id + '/changeBirthDate', model);
+  }
+
+  getUserPosts( id: number, pageNumber: number ){
+
+    const params = new HttpParams()
+      .set('senderId', id.toString())
+      .set('pageNumber', pageNumber.toString());
+
+    return this.http.get(this.baseUrl + 'users/' + 'profile', { params });
   }
 }
