@@ -1,10 +1,134 @@
 <div class="container-fluid">
+    <div class="row  d-flex justify-content-center">
+        <div class="col-10 col-md-8 ">
+            <div class="card shadow my-4">
+                <div class="background-top">
+                    <img src="{{user.photoUrl}}" alt="" class="rounded-circle" id="user-photo">
+                </div>
+                <div class="background-bottom text-center">
+                    <div class="row mb-2">
+                        <div class="col">
+                            <h2 id="user-name">{{user.name}} {{user.surname}}</h2>
+                        </div>
+                    </div>
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-3 d-flex justify-content-center">
+                            <div class="rounded-circle" id="profile" (click)="menu(0)">
+                                <i class="fa fa-user " aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <div class="col-3 d-flex justify-content-center">
+                            <div class="rounded-circle" id="posts" (click)="menu(1)">
+                                <i class="fa fa-columns" aria-hidden="true"></i>
+                            </div>
+                            
+                        </div>
+                        <div class="col-3 d-flex justify-content-center">
+                            <div class="rounded-circle" id="messages" (click)="menu(2)">
+                                <i class="fa fa-comment" aria-hidden="true"></i>
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+                <div *ngIf="visible[0]">
+                    <div class="row mb-3 mt-5">
+                        <div class="col"></div>
+                        <div class="col-4 pb-1 border-bottom description">
+                            <p>Email</p>
+                        </div>
+                        <div class="col-5 pb-1 border-bottom">
+                            {{user.email}}
+                        </div>
+                        <div class="col"></div>
+                    </div>
+                    
+                    <div class="row mb-3 mt-3">
+                        <div class="col"></div>
+                        <div class="col-4 pb-1 border-bottom description">
+                            <p>Date of birth</p>
+                        </div>
+                        <div class="col-5 pb-1 border-bottom">
+                            {{user.dateOfBirth | date}}
+                        </div>
+                        <div class="col"></div>
+                    </div>
+    
+                    <div class="row mb-3">
+                        <div class="col"></div>
+                        <div class="col-4 pb-1 border-bottom description">
+                            <p>City</p>
+                        </div>
+                        <div class="col-5 pb-1 border-bottom">
+                            {{user.city}}
+                        </div>
+                        <div class="col"></div>
+                    </div>
+    
+                    <div class="row mb-3">
+                        <div class="col"></div>
+                        <div class="col-4 pb-1 border-bottom description">
+                            <p>Country</p>
+                        </div>
+                        <div class="col-5 pb-1 border-bottom">
+                            {{user.country}}
+                        </div>
+                        <div class="col"></div>
+                    </div>
+    
+                    <div class="row mb-3">
+                        <div class="col"></div>
+                        <div class="col-4 pb-1 border-bottom description">
+                            <p>Company</p>
+                        </div>
+                        <div class="col-5 pb-1 border-bottom">
+                            {{user.company}}
+                        </div>
+                        <div class="col"></div>
+                    </div>
+    
+                    <div class="row mb-3">
+                        <div class="col"></div>
+                        <div class="col-4 pb-1 border-bottom description">
+                            <p>School</p>
+                        </div>
+                        <div class="col-5 pb-1 border-bottom">
+                            {{user.school}}
+                        </div>
+                        <div class="col"></div>
+                    </div>
+    
+                    <div class="row mb-3">
+                        <div class="col"></div>
+                        <div class="col-4 pb-1 border-bottom description">
+                            <p>About me</p>
+                        </div>
+                        <div class="col-5 pb-1 border-bottom">
+                            {{user.aboutMe}}
+                        </div>
+                        <div class="col"></div>
+                    </div>
+    
+                    <div class="row mb-3">
+                        <div class="col"></div>
+                        <div class="col-4 description">
+                            <p>My interests</p>
+                        </div>
+                        <div class="col-5">
+                            {{user.myInterests}}
+                        </div>
+                        <div class="col"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div
     class="search-results"
     infiniteScroll
     [infiniteScrollDistance]="2"
     [infiniteScrollThrottle]="50"
     (scrolled)="onScroll()"
+    *ngIf="visible[1]"
     >
         <div class="row d-flex justify-content-center">
             <div class="col-10 col-md-8" *ngFor="let post of allpost">
@@ -26,11 +150,13 @@
                         </div>
                     </div>
                 </div>
-                    <img class="card-img-top" src="{{post.photo}}" alt="img">
+                    <img class="card-img-bottom" src="{{post.photo}}" alt="img">
                 </div>
 
             </div>
         </div>
     </div>
-
+    <div *ngIf="visible[2]">
+        <p>Messages goes here!</p>
+    </div>
 </div>

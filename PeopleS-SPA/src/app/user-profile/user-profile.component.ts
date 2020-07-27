@@ -4,6 +4,9 @@ import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../_services/user.service';
 import { AuthService } from '../_services/auth.service';
 import { Post } from 'src/app/_models/post';
+import { map } from 'rxjs/operators';
+import { UserProfile } from '../_models/user-profile';
+import { User } from '../_models/User';
 
 @Component({
   selector: 'app-user-profile',
@@ -17,6 +20,8 @@ export class UserProfileComponent implements OnInit {  constructor(
   private authService: AuthService
   ) {
 }
+visible: boolean[] = [true, false, false];
+user: User;
 allpost: Post[];
 notEmptyPost = true;
 notscrolly = true;
@@ -24,9 +29,11 @@ currentPage: number;
   ngOnInit() {
     this.route.data.pipe(
     ).subscribe( data => {
-      this.allpost = data.userprofile;
+      this.allpost = data.userprofile.posts;
+      this.user = data.userprofile.user;
   });
   this.currentPage = 1;
+  console.log(this.visible[0]);
 }
 
 onScroll() {
@@ -40,7 +47,9 @@ onScroll() {
 loadNextPost() {
   this.currentPage += 1;
 
-  this.userService.getUserPosts( this.authService.getToken().nameid, this.currentPage).subscribe( (data: Post[]) => {
+  this.userService.getUserPosts( this.authService.getToken().nameid, this.currentPage)
+  .pipe( map<UserProfile, Post[]>(data => data.posts) )
+  .subscribe( (data: Post[]) => {
 
     if (data.length === 0 ) {
       this.notEmptyPost =  false;
@@ -57,6 +66,11 @@ loadNextPost() {
     this.spinner.hide();
     this.notscrolly = true;
   });
+}
+
+menu(choice: number) {
+  this.visible = [false, false, false];
+  this.visible[choice] = true;
 }
 
 }

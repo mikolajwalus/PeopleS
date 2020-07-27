@@ -10,4 +10,5 @@ export interface User {
     aboutMe: string;
     myInterests: string;
     dateOfBirth: Date;
+    photoUrl: string;
 }

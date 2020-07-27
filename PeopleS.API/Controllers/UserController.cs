@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using PeopleS.API.Data;
 using PeopleS.API.Dtos;
 using PeopleS.API.Helpers;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace PeopleS.API.Controllers
 {
@@ -104,17 +106,35 @@ namespace PeopleS.API.Controllers
         }
 
         [HttpGet("profile")]
-        public async Task<IActionResult> GetPosts([FromQuery]PostParams postParams)
+        public async Task<IActionResult> GetUserProfile([FromQuery]PostParams postParams)
         {
             var userId = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             if (userId != postParams.SenderId) return Unauthorized();
 
-            var posts = await _repo.GetUserPosts(postParams);
+            var postsFromRepo = await _repo.GetUserPosts(postParams);
 
-            var response = _mapper.Map<PostDto[]>(posts);
+            var mappedPosts = _mapper.Map<PostDto[]>(postsFromRepo);
 
-            Response.AddPagination(posts.CurrentPage, posts.PageSize, posts.TotalCount, posts.TotalPages);
+            Response.AddPagination( postsFromRepo.CurrentPage, 
+                                    postsFromRepo.PageSize, 
+                                    postsFromRepo.TotalCount, 
+                                    postsFromRepo.TotalPages);
+
+            var userFromRepo = await _repo.GetUser(userId);
+
+            var userToReturn = _mapper.Map<UserDetailedDto>(userFromRepo);
+
+            var objectToReturn = new {
+                posts = mappedPosts,
+                user = userToReturn,
+            };
+            
+            var jsonFormatter = new JsonSerializerSettings();
+            jsonFormatter.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            jsonFormatter.Formatting = Formatting.Indented;
+
+            var response = JsonConvert.SerializeObject(objectToReturn, jsonFormatter);
 
             return Ok(response);
         }
