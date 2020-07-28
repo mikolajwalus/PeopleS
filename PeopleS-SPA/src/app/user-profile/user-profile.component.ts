@@ -33,7 +33,6 @@ currentPage: number;
       this.user = data.userprofile.user;
   });
   this.currentPage = 1;
-  console.log(this.visible[0]);
 }
 
 onScroll() {

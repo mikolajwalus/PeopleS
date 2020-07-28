@@ -108,9 +108,9 @@ namespace PeopleS.API.Controllers
         [HttpGet("profile")]
         public async Task<IActionResult> GetUserProfile([FromQuery]PostParams postParams)
         {
-            var userId = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var userFromRepo = await _repo.GetUser(postParams.SenderId);
 
-            if (userId != postParams.SenderId) return Unauthorized();
+            if (userFromRepo == null) return BadRequest("User don't exist");
 
             var postsFromRepo = await _repo.GetUserPosts(postParams);
 
@@ -120,8 +120,6 @@ namespace PeopleS.API.Controllers
                                     postsFromRepo.PageSize, 
                                     postsFromRepo.TotalCount, 
                                     postsFromRepo.TotalPages);
-
-            var userFromRepo = await _repo.GetUser(userId);
 
             var userToReturn = _mapper.Map<UserDetailedDto>(userFromRepo);
 

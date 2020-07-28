@@ -16,7 +16,9 @@ export class NavComponent implements OnInit {
   user: any = {};
   logged: boolean;
 
-  constructor(private authService: AuthService, private router: Router, private alertifyService: AlertifyService) { }
+  constructor(private authService: AuthService,
+              private router: Router,
+              private alertifyService: AlertifyService) { }
 
   ngOnInit() {
     this.authService.isLoggedIn$.subscribe(status => this.logged = status);
@@ -44,5 +46,9 @@ export class NavComponent implements OnInit {
     this.user = {};
     this.model = {};
     this.alertifyService.success('Succesfully logged out');
+  }
+
+  toProfile() {
+    this.router.navigate([this.authService.getToken().nameid]);
   }
 }

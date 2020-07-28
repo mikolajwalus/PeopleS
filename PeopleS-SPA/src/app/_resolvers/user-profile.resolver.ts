@@ -1,4 +1,4 @@
-import { Resolve, Router } from '@angular/router';
+import { Resolve, Router, ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { UserService } from '../_services/user.service';
 import { AuthService } from '../_services/auth.service';
@@ -19,12 +19,12 @@ export class UserProfile implements Resolve<any> {
                     private alertify: AlertifyService,
                     private router: Router) { }
 
-  resolve() {
-    console.log(this.authService.getToken());
-    return this.userService.getUserPosts( this.authService.getToken().nameid, 1 )
+  resolve( router: ActivatedRouteSnapshot ) {
+    console.log( router.params['id']);
+    return this.userService.getUserPosts( router.params['id'] , 1 )
         .pipe(
             catchError( error => {
-            this.alertify.error('Problem during data retrieving');
+            this.alertify.error(error.error);
             this.router.navigate(['home']);
             return of(null);
         })

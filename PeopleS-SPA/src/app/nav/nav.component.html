@@ -14,7 +14,7 @@
   <div class="inline my-2 my-lg-0"*ngIf="logged">
     <div class="btn-group" role="group">
       <button type="button" class="btn btn-secondary"><i class="fa fa-clipboard"></i> Dashboard</button>
-      <button type="button" class="btn btn-secondary" routerLink="edit-profile"><i class="fa fa-edit"></i> My profile</button>
+      <button type="button" class="btn btn-secondary" (click)="toProfile()"><i class="fa fa-edit"></i> My profile</button>
       <button type="button" class="btn btn-secondary"><i class="fa fa-comment"></i></button>
       <button type="button" class="btn btn-secondary"><i class="fa fa-user"></i></button>
     
@@ -24,7 +24,7 @@
         </button>
         <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu dropdown-menu-right"
             role="menu" aria-labelledby="button-animated">
-          <li role="menuitem"><a class="dropdown-item">Action</a></li>
+          <li role="menuitem"><a class="dropdown-item" routerLink="edit-profile">Edit profile</a></li>
           <li role="menuitem"><a class="dropdown-item">Another action</a>
           </li>
           <li role="menuitem"><a class="dropdown-item" (click)="logout()">Logout</a></li>
