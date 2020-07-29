@@ -136,5 +136,20 @@ namespace PeopleS.API.Controllers
 
             return Ok(response);
         }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchUser([FromQuery] UserParams userParams) 
+        {
+            var usersFromRepo = await _repo.SearchUser(userParams);
+
+            var usersForReturn = _mapper.Map<UserForSearchDto[]>(usersFromRepo);
+
+            Response.AddPagination( usersFromRepo.CurrentPage,
+                                    usersFromRepo.PageSize,
+                                    usersFromRepo.TotalCount,
+                                    usersFromRepo.TotalPages);
+
+            return Ok(usersForReturn);
+        }
     }
 }

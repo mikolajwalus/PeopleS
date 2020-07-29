@@ -12,6 +12,7 @@ namespace PeopleS.API.Helpers
             CreateMap<UserMainInfoDto, User>().ReverseMap();
             CreateMap<User, UserDateDto>().ReverseMap();
             CreateMap<User, UserForPostDto>();
+            CreateMap<User, UserForSearchDto>();
             CreateMap<Post, PostDto>();
         }
     }

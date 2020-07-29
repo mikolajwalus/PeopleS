@@ -49,6 +49,17 @@ namespace PeopleS.API.Data
             return await PagedList<Post>.CreateAsync(posts, postParams.PageNumber);
         }
 
+        public async Task<PagedList<User>> SearchUser(UserParams userParams)
+        {
+            string trimmedString = userParams.SearchedString.Replace(" ","").ToLower();
+            var users = _context.Users.Where( x => 
+                x.Name.ToLower().Contains(trimmedString) ||
+                x.Surname.ToLower().Contains(trimmedString) ||
+                string.Concat(x.Name.ToLower(), x.Surname.ToLower()).Contains(trimmedString)
+            );
+            return await PagedList<User>.CreateAsync(users, userParams.PageNumber);
+        }
+
         public async Task<bool> SaveAll()
         {
             if( await _context.SaveChangesAsync() > 0)return true;

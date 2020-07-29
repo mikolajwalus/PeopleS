@@ -14,5 +14,6 @@ namespace PeopleS.API.Data
         public Task<IEnumerable<Value>> GetValues();
         public Task<User> GetUser(int id);
         public Task<PagedList<Post>> GetUserPosts(PostParams postParams);
+        public Task<PagedList<User>> SearchUser( UserParams userParams);
     }
 }
