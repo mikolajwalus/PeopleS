@@ -19,6 +19,8 @@ namespace PeopleS.API.Models
         public string AboutMe { get; set; }
         public string MyInterests { get; set; }
         public string PhotoUrl { get; set; } 
-        // public ICollection<Post> Posts { get; set; }
+        public ICollection<Post> Posts { get; set; }
+        public ICollection<Friendship> FriendsRequested { get; set; }
+        public ICollection<Friendship> FriendsRecieved { get; set; }
     }
 }

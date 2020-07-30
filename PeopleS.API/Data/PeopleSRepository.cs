@@ -56,7 +56,8 @@ namespace PeopleS.API.Data
                 x.Name.ToLower().Contains(trimmedString) ||
                 x.Surname.ToLower().Contains(trimmedString) ||
                 string.Concat(x.Name.ToLower(), x.Surname.ToLower()).Contains(trimmedString)
-            );
+            ).Include(x => x.FriendsRecieved)
+            .Include(x => x.FriendsRequested);
             return await PagedList<User>.CreateAsync(users, userParams.PageNumber);
         }
 
@@ -65,6 +66,15 @@ namespace PeopleS.API.Data
             if( await _context.SaveChangesAsync() > 0)return true;
 
             return false;
+        }
+
+        public async Task<IEnumerable<Friendship>> GetUserFriendships(int id)
+        {
+            return await _context.Friendships.Where( x => 
+                (x.Reciever.Id == id || x.Requestor.Id == id) && x.Status == 1
+            ).Include(x => x.Requestor)
+            .Include(x => x.Reciever)
+            .ToListAsync();
         }
     }
 }

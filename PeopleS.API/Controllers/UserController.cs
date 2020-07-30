@@ -140,9 +140,11 @@ namespace PeopleS.API.Controllers
         [HttpGet("search")]
         public async Task<IActionResult> SearchUser([FromQuery] UserParams userParams) 
         {
+            var userId = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
             var usersFromRepo = await _repo.SearchUser(userParams);
 
-            var usersForReturn = _mapper.Map<UserForSearchDto[]>(usersFromRepo);
+            var usersForReturn = usersFromRepo.ChangeToSearchDto(userId);
 
             Response.AddPagination( usersFromRepo.CurrentPage,
                                     usersFromRepo.PageSize,
