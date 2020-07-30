@@ -24,6 +24,7 @@ import { UserEditorComponent } from './user-editor/user-editor.component';
 import { UserService } from './_services/user.service';
 import { AuthService } from './_services/auth.service';
 import { UserProfileComponent } from './user-profile/user-profile.component';
+import { UserSearchComponent } from './user-search/user-search.component';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -38,7 +39,8 @@ export function tokenGetter() {
       LoginComponent,
       RegisterComponent,
       UserEditorComponent,
-      UserProfileComponent
+      UserProfileComponent,
+      UserSearchComponent
    ],
    imports: [
       BrowserModule,

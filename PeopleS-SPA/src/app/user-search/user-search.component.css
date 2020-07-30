@@ -1,0 +1,41 @@
+.post-img > img{
+    min-height: 50px;
+    min-width: 50px;
+    max-height: 80px;
+    max-width: 80px;
+}
+
+.card {
+    width: 100%;
+}
+
+@media all and (min-width: 901px) {
+
+    .post-header {
+        font-size: 20px;
+    }
+
+    .icon {
+        font-size: 30px;
+    }
+}
+
+@media all and (min-width: 601px) and (max-width: 900px) {
+    .user-header {
+        font-size: 18px;
+    }
+
+    .icon {
+        font-size: 25px;
+    }
+}
+    
+@media all and (max-width: 600px) {
+    .user-header {
+        font-size: 16px;
+    }
+
+    .icon {
+        font-size: 20px;
+    }
+}

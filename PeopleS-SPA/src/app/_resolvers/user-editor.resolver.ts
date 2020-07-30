@@ -21,7 +21,6 @@ export class UserEditor implements Resolve<any> {
                     private router: Router) { }
 
   resolve() {
-    console.log(this.authService.getToken());
     return this.userService.getUser( this.authService.getToken().nameid )
         .pipe( catchError( error => {
             this.alertify.error('Problem during data retrieving');

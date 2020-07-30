@@ -1,0 +1,54 @@
+<div class="container-fluid">
+    <div class="row d-flex justify-content-center">
+        <div class="col-10 col-md-8">
+            <div class="row mt-5">
+                <div class="col">
+                        <input type="text" class="form-control" id="Query" placeholder="Search for your friends" [(ngModel)]="query" name="Password">
+                </div>
+                <div class="col-2">
+                    <button type="submit" class="btn btn-primary btn-block" (click)="onSearch()"><i class="fa fa-search"></i></button>
+                </div>
+            </div>
+            <div
+            class="search-results"
+            infiniteScroll
+            [infiniteScrollDistance]="2"
+            [infiniteScrollThrottle]="50"
+            (scrolled)="onScroll()"
+            >
+                <div class="row mt-5" *ngFor="let result of searchResult">
+                    <div class="card shadow">
+                        <div class="row">
+                            <div class="col-3 col-lg-2 col-xl-1  ml-3 mr-2 pr-0 py-4 justify-content-center">
+                                <img src="{{result.photoUrl}}" alt="" class="img-fluid rounded-circle">
+                            </div>
+                            <div class="col d-flex align-items-center">
+                                <div>
+                                    <h5 class="user-header">{{result.name}} {{result.surname}}</h5>
+                                    <p class="user-header">{{result.city}} {{result.country}}</p>
+                                </div>
+                            </div>
+                            <div class="col-3 col-md-2 d-flex align-items-center">
+                                <div class="w-100 mr-5">
+                                    <button class="btn btn-secondary btn-block" *ngIf="userCheck(result.id, result.friendshipStatus) === 0">
+                                        <span class="icon"><i class="fa fa-arrow-right"></i></span>
+                                    </button>
+                                    <button class="btn btn-success btn-block" *ngIf="userCheck(result.id, result.friendshipStatus) === 1">
+                                        <span class="icon"><i class="fa fa-check"></i></span>
+                                    </button>
+                                    <button class="btn btn-danger btn-block" *ngIf="userCheck(result.id, result.friendshipStatus) === 2">
+                                        <span class="icon"><i class="fa fa-ban"></i></span>
+                                    </button>
+                                    <button class="btn btn-primary btn-block"*ngIf="userCheck(result.id, result.friendshipStatus) === 3">
+                                        <span class="icon"><i class="fa fa-user-plus"></i></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

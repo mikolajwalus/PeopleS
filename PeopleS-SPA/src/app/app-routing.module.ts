@@ -9,6 +9,8 @@ import { UserEditorComponent } from './user-editor/user-editor.component';
 import { UserEditor } from './_resolvers/user-editor.resolver';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { UserProfile } from './_resolvers/user-profile.resolver';
+import { UserSearchComponent } from './user-search/user-search.component';
+import { UserSearcher } from './_resolvers/user-search.resolver';
 
 
 const routes: Routes = [
@@ -16,9 +18,11 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent, canActivate: [LoggedGuard] },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'edit-profile', component: UserEditorComponent, resolve: {user: UserEditor} , canActivate: [AuthGuard] },
+  { path: 'search', component: UserSearchComponent, canActivate: [AuthGuard]},
+  { path: 'search/:q', component: UserSearchComponent, resolve: {userSearcher: UserSearcher}, canActivate: [AuthGuard]},
   { path: ':id', component: UserProfileComponent, resolve: {userprofile: UserProfile}, canActivate: [AuthGuard] },
   { path: '',   redirectTo: '/login', pathMatch: 'full' },
-  {path: '**', redirectTo: '/login', pathMatch: 'full'},
+  { path: '**', redirectTo: '/login', pathMatch: 'full' },
 ];
 
 @NgModule({

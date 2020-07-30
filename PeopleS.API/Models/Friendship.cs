@@ -6,6 +6,10 @@ namespace PeopleS.API.Models
         public User Reciever { get; set; }
         public int RequestorId { get; set; }
         public int RecieverId { get; set; }
+        /// 0 - invited
+        /// 1 - accepted
+        /// 2 - blocked
+        /// 3 - none
         public int Status { get; set; } = 0;
     }
 }
