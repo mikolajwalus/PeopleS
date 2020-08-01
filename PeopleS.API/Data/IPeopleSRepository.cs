@@ -16,5 +16,7 @@ namespace PeopleS.API.Data
         public Task<PagedList<Post>> GetUserPosts(PostParams postParams);
         public Task<PagedList<User>> SearchUser( UserParams userParams);
         public Task<IEnumerable<Friendship>> GetUserFriendships(int id);
+        public Task<int> GetFriendshipStatus(int recieverId, int requestorId);
+        public Task<int> CreateFriendship(int recieverId, int requestorId);
     }
 }

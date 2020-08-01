@@ -10,6 +10,7 @@ namespace PeopleS.API.Models
         /// 1 - accepted
         /// 2 - blocked
         /// 3 - none
+        /// 4 - yourself (not exist in database)
         public int Status { get; set; } = 0;
     }
 }

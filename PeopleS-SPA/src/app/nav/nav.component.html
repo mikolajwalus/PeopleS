@@ -13,10 +13,10 @@
 
   <div class="inline my-2 my-lg-0"*ngIf="logged">
     <div class="btn-group" role="group">
-      <button type="button" class="btn btn-secondary"><i class="fa fa-clipboard"></i> Dashboard</button>
       <button type="button" class="btn btn-secondary" (click)="toProfile()"><i class="fa fa-edit"></i> My profile</button>
       <button type="button" class="btn btn-secondary"><i class="fa fa-comment"></i></button>
       <button type="button" class="btn btn-secondary"><i class="fa fa-user"></i></button>
+      <button type="button" class="btn btn-secondary" (click)="toSearch()"><i class="fa fa-search"></i></button>
     
       <div class="btn-group" dropdown>
         <button id="button-animated" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"

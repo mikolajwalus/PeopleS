@@ -51,4 +51,8 @@ export class NavComponent implements OnInit {
   toProfile() {
     this.router.navigate([this.authService.getToken().nameid]);
   }
+
+  toSearch() {
+    this.router.navigate(['search']);
+  }
 }

@@ -128,7 +128,7 @@
     [infiniteScrollDistance]="2"
     [infiniteScrollThrottle]="50"
     (scrolled)="onScroll()"
-    *ngIf="visible[1]"
+    *ngIf="visible[1] && postsRecieved()"
     >
         <div class="row d-flex justify-content-center">
             <div class="col-10 col-md-8" *ngFor="let post of allpost">

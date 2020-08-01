@@ -75,7 +75,7 @@ namespace PeopleS.API.Controllers
         }
 
         [HttpPut("{id}/changePassword")]
-        public async Task<IActionResult> ChangeEmail(int id, [FromBody]PasswordChangeDto passwordObject)
+        public async Task<IActionResult> ChangePassword(int id, [FromBody]PasswordChangeDto passwordObject)
         {
             var userId = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
@@ -89,7 +89,7 @@ namespace PeopleS.API.Controllers
             return NoContent();
         }
 
-        [HttpPut("{id}/changeBirthDate")]
+        [HttpPut("{id}/changeBirthDate+")]
         public async Task<IActionResult> ChangeBirthDate(int id, [FromBody]UserDateDto dateObject)
         {
             var userId = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -112,29 +112,48 @@ namespace PeopleS.API.Controllers
 
             if (userFromRepo == null) return BadRequest("User don't exist");
 
-            var postsFromRepo = await _repo.GetUserPosts(postParams);
-
-            var mappedPosts = _mapper.Map<PostDto[]>(postsFromRepo);
-
-            Response.AddPagination( postsFromRepo.CurrentPage, 
-                                    postsFromRepo.PageSize, 
-                                    postsFromRepo.TotalCount, 
-                                    postsFromRepo.TotalPages);
-
             var userToReturn = _mapper.Map<UserDetailedDto>(userFromRepo);
 
-            var objectToReturn = new {
-                posts = mappedPosts,
-                user = userToReturn,
-            };
-            
+            var senderId = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            var status = await _repo.GetFriendshipStatus(userFromRepo.Id, senderId);
+            var statusReversed = await _repo.GetFriendshipStatus(senderId, userFromRepo.Id);
+
             var jsonFormatter = new JsonSerializerSettings();
             jsonFormatter.ContractResolver = new CamelCasePropertyNamesContractResolver();
             jsonFormatter.Formatting = Formatting.Indented;
 
-            var response = JsonConvert.SerializeObject(objectToReturn, jsonFormatter);
+            if( (status == 1 || status == 4) || (statusReversed == 1 || statusReversed == 4))
+            {
+                var postsFromRepo = await _repo.GetUserPosts(postParams);
 
-            return Ok(response);
+                var mappedPosts = _mapper.Map<PostDto[]>(postsFromRepo);
+
+                Response.AddPagination( postsFromRepo.CurrentPage, 
+                                        postsFromRepo.PageSize, 
+                                        postsFromRepo.TotalCount, 
+                                        postsFromRepo.TotalPages);
+
+                var objectToReturn = new {
+                    posts = mappedPosts,
+                    user = userToReturn,
+                };
+
+                var response = JsonConvert.SerializeObject(objectToReturn, jsonFormatter);
+
+                return Ok(response);
+            }
+            else
+            {
+                var objectToReturn = new {
+                    posts = new {},
+                    user = userToReturn,
+                };
+
+                var response = JsonConvert.SerializeObject(objectToReturn, jsonFormatter);
+
+                return Ok(response);
+            }
         }
 
         [HttpGet("search")]
@@ -152,6 +171,37 @@ namespace PeopleS.API.Controllers
                                     usersFromRepo.TotalPages);
 
             return Ok(usersForReturn);
+        }
+
+        [HttpPost("{id}/addFriend/{recieverId}")]
+        public async Task<IActionResult> AddFriend( int id, int recieverId )
+        {
+            var userId = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (userId != id) return Unauthorized();
+
+            var userFromRepo = await _repo.GetUser(recieverId);
+
+            if (userFromRepo == null) return BadRequest("Reciever don't exist");
+
+            var status = await _repo.GetFriendshipStatus(recieverId, id);
+
+            if (status == 0) return BadRequest("Invitation already sent");
+
+            if(status == 1) return BadRequest("User is already a friend");
+
+            if(status == 2) return BadRequest("User is blocked!");
+
+            if (status == 4) return BadRequest("User cannot be friend with himself!");
+
+            var updatedStatus = await _repo.CreateFriendship(recieverId, id);
+
+            var objectToReturn = new {
+                    status = updatedStatus
+                };
+
+
+            return Ok(objectToReturn);
         }
     }
 }

@@ -23,8 +23,8 @@
                                 <img src="{{result.photoUrl}}" alt="" class="img-fluid rounded-circle">
                             </div>
                             <div class="col d-flex align-items-center">
-                                <div>
-                                    <h5 class="user-header">{{result.name}} {{result.surname}}</h5>
+                                <div class="user-name">
+                                    <a (click)="toProfile(result.id)"><h5 class="user-header">{{result.name}} {{result.surname}}</h5></a>
                                     <p class="user-header">{{result.city}} {{result.country}}</p>
                                 </div>
                             </div>

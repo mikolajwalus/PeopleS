@@ -76,5 +76,70 @@ namespace PeopleS.API.Data
             .Include(x => x.Reciever)
             .ToListAsync();
         }
+
+        /// <summary>
+        /// Returns  the value representation of friendship status from requestor view
+        /// </summary>
+        /// <returns>
+        /// Returns:
+        /// 0 - invited
+        /// 1 - accepted
+        /// 2 - blocked
+        /// 3 - none
+        /// 4 - yourself (not exist in database)
+        /// 5 - waiting for acceptation
+        /// </returns>
+        public async Task<int> GetFriendshipStatus(int recieverId, int requestorId)
+        {
+            if(recieverId == requestorId) return 4;
+
+            var status = await _context.Friendships
+            .Where(x => ( x.RecieverId == recieverId && x.RequestorId == requestorId ) ||
+                        ( x.RecieverId == requestorId && x.RequestorId == recieverId ) )
+            .FirstOrDefaultAsync();
+
+            if( status == null) return 3;
+
+            if( status.RecieverId == requestorId && status.RequestorId == recieverId && status.Status == 0) return 5;
+
+            return status.Status;
+        }
+        public async Task<int> CreateFriendship(int recieverId, int requestorId)
+        {
+            var friendshipFromRepo = await _context.Friendships
+            .Where( x => (x.RecieverId == recieverId && x.RequestorId == requestorId)
+                      || (x.RecieverId == requestorId && x.RequestorId == recieverId))
+            .FirstOrDefaultAsync();
+
+            if(friendshipFromRepo == null)
+            {
+                var recieverFromRepo = _context.Users.Where(x => x.Id == recieverId).FirstOrDefault();
+                var requestorFromRepo = _context.Users.Where(x => x.Id == requestorId).FirstOrDefault();
+
+                _context.Add<Friendship>(new Friendship{
+                    Status = 0,
+                    Requestor = requestorFromRepo,
+                    RequestorId = requestorId,
+                    Reciever = recieverFromRepo,
+                    RecieverId = recieverId
+                });
+
+                await SaveAll();
+
+                return 0;
+            }
+
+            if( friendshipFromRepo.RecieverId == recieverId && friendshipFromRepo.RequestorId == requestorId ) return 0;
+
+            var friendship = _context.Friendships
+                .Where(x => x.RecieverId == requestorId && x.RequestorId == recieverId)
+                .FirstOrDefault();
+
+            friendship.Status = 1;
+
+            await SaveAll();
+
+            return 1;
+        }
     }
 }

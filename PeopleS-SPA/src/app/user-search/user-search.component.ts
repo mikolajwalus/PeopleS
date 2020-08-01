@@ -73,7 +73,11 @@ export class UserSearchComponent implements OnInit {constructor(
   }
 
   userCheck(id: number, status: number): number {
-    if( id === this.authService.getToken().nameid ) return 5;
-    return status
+    if( id === parseInt(this.authService.getToken().nameid) ) return 5; 
+    return status;
+  }
+
+  toProfile(id: number) {
+    this.router.navigate([id]);
   }
 }

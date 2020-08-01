@@ -8,6 +8,10 @@
 .card {
     width: 100%;
 }
+.user-name > a :hover{
+    cursor: pointer;
+    text-decoration: underline;
+}
 
 @media all and (min-width: 901px) {
 

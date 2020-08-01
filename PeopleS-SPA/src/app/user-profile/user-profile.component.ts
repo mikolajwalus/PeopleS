@@ -72,4 +72,8 @@ menu(choice: number) {
   this.visible[choice] = true;
 }
 
+postsRecieved(): boolean{
+  return !(Object.keys(this.allpost).length === 0);
+}
+
 }
