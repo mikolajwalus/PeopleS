@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaderResponse, HttpParams } from '@angular/common/http
 import { environment } from 'src/environments/environment';
 import { User } from '../_models/User';
 import { UserSearch } from '../_models/user-search';
+import { AuthService } from './auth.service';
+import { Status } from '../_models/status';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +12,8 @@ import { UserSearch } from '../_models/user-search';
 export class UserService {
   baseUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+              private authService: AuthService) { }
 
   getUser(id: number) {
     return this.http.get(this.baseUrl + 'users/' + id);
@@ -21,7 +24,6 @@ export class UserService {
   }
 
   changePassword(id: number, model: any) {
-    console.log(model);
     return this.http.put(this.baseUrl + 'users/' + id + '/changePassword', model);
   }
 
@@ -44,5 +46,9 @@ export class UserService {
     .set('pageNumber', pageNumber.toString());
 
     return this.http.get<UserSearch[]>(this.baseUrl + 'users/' + 'search', { params });
+  }
+
+  addFriend(friendId: number){
+    return this.http.post<Status>(this.baseUrl + 'users/' + this.authService.getToken().nameid + '/addFriend/' + friendId , {});
   }
 }

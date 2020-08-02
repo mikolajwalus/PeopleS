@@ -30,17 +30,35 @@
                             </div>
                             <div class="col-3 col-md-2 d-flex align-items-center">
                                 <div class="w-100 mr-5">
-                                    <button class="btn btn-secondary btn-block" *ngIf="userCheck(result.id, result.friendshipStatus) === 0">
-                                        <span class="icon"><i class="fa fa-arrow-right"></i></span>
+                                    <button class="btn btn-warning btn-block" 
+                                        title="Add to friend list"
+                                        *ngIf="result.friendshipStatus === 0"
+                                        (click)="addFriend(result.id)">
+                                        <span class="icon"><i class="fa fa-question"></i></span>
                                     </button>
-                                    <button class="btn btn-success btn-block" *ngIf="userCheck(result.id, result.friendshipStatus) === 1">
+                                    <button class="btn btn-success btn-block" 
+                                        title="Friend"
+                                        *ngIf="result.friendshipStatus === 1"
+                                        disabled>
                                         <span class="icon"><i class="fa fa-check"></i></span>
                                     </button>
-                                    <button class="btn btn-danger btn-block" *ngIf="userCheck(result.id, result.friendshipStatus) === 2">
+                                    <button class="btn btn-danger btn-block"
+                                        title="User blocked" 
+                                        *ngIf="result.friendshipStatus === 2"
+                                        disabled>
                                         <span class="icon"><i class="fa fa-ban"></i></span>
                                     </button>
-                                    <button class="btn btn-primary btn-block"*ngIf="userCheck(result.id, result.friendshipStatus) === 3">
+                                    <button class="btn btn-primary btn-block"
+                                        title="Add to friend list"
+                                        *ngIf="result.friendshipStatus === 3"
+                                        (click)="addFriend(result.id)">
                                         <span class="icon"><i class="fa fa-user-plus"></i></span>
+                                    </button>
+                                    <button class="btn btn-secondary btn-block" 
+                                        title="Invitation sent"
+                                        *ngIf="result.friendshipStatus === 5"
+                                        disabled>
+                                        <span class="icon"><i class="fa fa-arrow-right"></i></span>
                                     </button>
                                 </div>
                             </div>

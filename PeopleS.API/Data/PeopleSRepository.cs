@@ -126,10 +126,10 @@ namespace PeopleS.API.Data
 
                 await SaveAll();
 
-                return 0;
+                return 5;
             }
 
-            if( friendshipFromRepo.RecieverId == recieverId && friendshipFromRepo.RequestorId == requestorId ) return 0;
+            if( friendshipFromRepo.RecieverId == recieverId && friendshipFromRepo.RequestorId == requestorId ) return 5;
 
             var friendship = _context.Friendships
                 .Where(x => x.RecieverId == requestorId && x.RequestorId == recieverId)

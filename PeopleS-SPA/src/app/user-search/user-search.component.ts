@@ -45,39 +45,45 @@ export class UserSearchComponent implements OnInit {constructor(
     if (this.notscrolly && this.notEmptyPost) {
       this.spinner.show();
       this.notscrolly = false;
-      this.loadNextPost();
+      this.loadNextData();
    }
   }
 
-  loadNextPost() {
+  loadNextData() {
     this.currentPage += 1;
     console.log(this.currentPage);
     this.userService.searchUsers(this.queryForNextResults , this.currentPage)
     .subscribe( (data: UserSearch[]) => {
-      console.log('halo');
       if (data.length === 0 ) {
         this.notEmptyPost =  false;
       }
 
-      console.log(this.searchResult);
-
       for (const item of data) {
         this.searchResult.push(item);
       }
-
-      console.log(this.searchResult);
 
       this.spinner.hide();
       this.notscrolly = true;
     });
   }
 
-  userCheck(id: number, status: number): number {
-    if( id === parseInt(this.authService.getToken().nameid) ) return 5; 
-    return status;
-  }
-
   toProfile(id: number) {
     this.router.navigate([id]);
+  }
+
+  addFriend(id: number) {
+    this.userService.addFriend(id).subscribe( data => {
+      console.log(data);
+      console.log(this.searchResult.find( obj => {
+        return obj.id === id;
+      }));
+      this.searchResult.find( obj => {
+        return obj.id === id;
+      }).friendshipStatus =  data.status;
+
+      console.log(this.searchResult.find( obj => {
+        return obj.id === id;
+      }));
+    });
   }
 }

@@ -8,6 +8,7 @@ using PeopleS.API.Dtos;
 using PeopleS.API.Helpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.Linq;
 
 namespace PeopleS.API.Controllers
 {
@@ -164,6 +165,9 @@ namespace PeopleS.API.Controllers
             var usersFromRepo = await _repo.SearchUser(userParams);
 
             var usersForReturn = usersFromRepo.ChangeToSearchDto(userId);
+
+            if( usersForReturn.Where( x => x.Id == userId).FirstOrDefault() != null )
+                usersForReturn.Where( x => x.Id == userId).FirstOrDefault().FriendshipStatus = 4;
 
             Response.AddPagination( usersFromRepo.CurrentPage,
                                     usersFromRepo.PageSize,

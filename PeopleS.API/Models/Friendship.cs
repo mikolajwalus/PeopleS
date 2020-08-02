@@ -11,6 +11,7 @@ namespace PeopleS.API.Models
         /// 2 - blocked
         /// 3 - none
         /// 4 - yourself (not exist in database)
+        /// 5 - invitation sent (not appearing in database but as result)
         public int Status { get; set; } = 0;
     }
 }

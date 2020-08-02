@@ -35,7 +35,16 @@ namespace PeopleS.API.Helpers
 
                 if( source[i].FriendsRecieved.Where(x => x.RequestorId == friendId).FirstOrDefault() != null )
                 {
-                    mappedList[i].FriendshipStatus = source[i].FriendsRecieved.Where(x => x.RequestorId == friendId).FirstOrDefault().Status;
+
+                    int status = source[i].FriendsRecieved.Where(x => x.RequestorId == friendId).FirstOrDefault().Status;
+
+                    if( status == 0 ) 
+                    {
+                        mappedList[i].FriendshipStatus = 5;
+                        continue;
+                    }
+                    
+                    mappedList[i].FriendshipStatus = status;
                     continue;
                 }
 
