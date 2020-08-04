@@ -10,6 +10,7 @@ namespace PeopleS.API.Data
         public DbSet<User> Users { get; set; } 
         public DbSet<Post> Posts { get; set; }
         public DbSet<Friendship> Friendships { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -27,6 +28,16 @@ namespace PeopleS.API.Data
               .WithMany(fs => fs.FriendsRecieved)
               .HasForeignKey(fs => fs.RecieverId)
               .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Message>()
+                .HasOne(u => u.Sender)
+                .WithMany(m => m.MessagesSent)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Message>()
+                .HasOne(u => u.Recipient)
+                .WithMany(m => m.MessagesRecieved)
+                .OnDelete(DeleteBehavior.Restrict);
       }
     }
 }

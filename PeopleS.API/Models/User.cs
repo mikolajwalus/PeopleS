@@ -22,5 +22,7 @@ namespace PeopleS.API.Models
         public ICollection<Post> Posts { get; set; }
         public ICollection<Friendship> FriendsRequested { get; set; }
         public ICollection<Friendship> FriendsRecieved { get; set; }
+        public ICollection<Message> MessagesSent { get; set; }
+        public ICollection<Message> MessagesRecieved { get; set; }
     }
 }

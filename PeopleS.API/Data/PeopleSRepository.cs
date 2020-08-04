@@ -141,5 +141,43 @@ namespace PeopleS.API.Data
 
             return 1;
         }
+
+        public async Task<Message> GetMessage(int id)
+        {
+            return await _context.Messages.Where(x => x.Id == id).FirstOrDefaultAsync();
+        }
+
+        public async Task<PagedList<Message>> GetMessageThread(int requestorId, ThreadParams threadParams)
+        {
+            var messagesThread = _context.Messages.Where( x => 
+                (x.RecipientId == requestorId && x.SenderId == threadParams.SecondUserId) ||
+                (x.RecipientId == threadParams.SecondUserId && x.SenderId == requestorId))
+                .Include( x => x.Sender)
+                .Include( x => x.Recipient)
+                .OrderByDescending(x => x.MessageSent);
+
+            var massage = await messagesThread.ToListAsync();
+
+            return await PagedList<Message>.CreateAsync(messagesThread, threadParams.PageNumber);
+        }
+
+        public async Task<bool> MarkThreadAsRead(int requestorId, int secondUserId)
+        {
+                var messagesThread = await _context.Messages.Where( x => 
+                (x.RecipientId == requestorId && x.SenderId == secondUserId))
+                .Where(x => !x.IsRead)
+                .ToListAsync();
+
+                if(messagesThread == null) return false;
+
+                foreach (Message message in messagesThread)
+                {
+                    message.IsRead = true;
+                }
+
+                if( await SaveAll() ) return true;
+
+                return false;
+        }
     }
 }

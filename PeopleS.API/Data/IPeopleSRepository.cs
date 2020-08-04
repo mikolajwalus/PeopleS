@@ -18,5 +18,8 @@ namespace PeopleS.API.Data
         public Task<IEnumerable<Friendship>> GetUserFriendships(int id);
         public Task<int> GetFriendshipStatus(int recieverId, int requestorId);
         public Task<int> CreateFriendship(int recieverId, int requestorId);
+        public Task<Message> GetMessage(int id);
+        public Task<PagedList<Message>> GetMessageThread(int requestorId, ThreadParams threadParams);
+        public Task<bool> MarkThreadAsRead(int requestorId, int secondUserId);
     }
 }
