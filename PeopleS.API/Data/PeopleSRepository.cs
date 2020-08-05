@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using PeopleS.API.Dtos;
 using PeopleS.API.Helpers;
 using PeopleS.API.Models;
 
@@ -141,6 +144,55 @@ namespace PeopleS.API.Data
 
             return 1;
         }
+        
+        public async Task<bool> CreateMessage(Message message)
+        {
+            var thread = _context.Threads
+                    .Where(x => x.ThreadParticipants.Where(y => y.ParticipantId == message.SenderId).FirstOrDefault() != null && 
+                                x.ThreadParticipants.Where(y => y.ParticipantId == message.RecipientId).FirstOrDefault() != null)
+                    .Include(x => x.Messages)
+                    .Include(x => x.ThreadParticipants)
+                    .FirstOrDefault();
+            if( thread == null )
+            {
+                var newThread = new Thread(){
+                    Messages = new Collection<Message>(),
+                    ThreadParticipants = new Collection<ThreadParticipant>(),
+                    LastModified = DateTime.Now
+                };
+
+                newThread.Messages.Add(message);
+
+                var participantOne = new ThreadParticipant() {
+                    ParticipantId = message.SenderId,
+                    Status = true
+                };
+
+                var participantTwo = new ThreadParticipant() {
+                    ParticipantId = message.RecipientId,
+                    Status = false
+                };
+
+                newThread.ThreadParticipants.Add(participantOne);
+                newThread.ThreadParticipants.Add(participantTwo);                
+
+                Add(newThread);
+
+                return await SaveAll();
+            }
+
+            thread.Messages.Add(message);
+
+            thread.LastModified = DateTime.Now;
+
+            var recipient = thread.ThreadParticipants.Where(x => x.ParticipantId == message.RecipientId).FirstOrDefault();
+            recipient.Status = false;
+
+            var sender = thread.ThreadParticipants.Where(x => x.ParticipantId == message.SenderId).FirstOrDefault();
+            sender.Status = true;
+
+            return await SaveAll();
+        }
 
         public async Task<Message> GetMessage(int id)
         {
@@ -168,16 +220,83 @@ namespace PeopleS.API.Data
                 .Where(x => !x.IsRead)
                 .ToListAsync();
 
-                if(messagesThread == null) return false;
+                if(messagesThread.Count == 0) return false;
 
                 foreach (Message message in messagesThread)
                 {
+                    message.DateRead = DateTime.Now;
                     message.IsRead = true;
                 }
+
+                var requestor = await _context.ThreadParticipants.Where( x => 
+                        x.ThreadId == messagesThread.FirstOrDefault().ThreadId && x.ParticipantId == requestorId )
+                    .FirstOrDefaultAsync();
+
+                requestor.Status = true;
 
                 if( await SaveAll() ) return true;
 
                 return false;
+        }
+
+
+        public async Task<PagedList<ThreadDto>> GetThreadList(int requestorId, ThreadListParams listParams)
+        {
+            
+            var threads = await _context.Threads
+                .Where(x => x.ThreadParticipants.Where(y => y.ParticipantId == requestorId).FirstOrDefault() != null )
+                .OrderByDescending(x => x.LastModified)
+                .Include(x => x.ThreadParticipants)
+                .Skip((listParams.PageNumber - 1) * listParams.PageSize )
+                .Take(listParams.PageSize)
+                .ToListAsync();
+
+            var threadDtos = new List<ThreadDto>();
+
+            var threadsNumber = await _context.Threads
+                .Where(x => x.ThreadParticipants.Where(y => y.ParticipantId == requestorId).FirstOrDefault() != null )
+                .OrderByDescending(x => x.LastModified)
+                .CountAsync();
+
+            if( threadsNumber == 0) return null;
+
+            foreach (Thread thread in threads)
+            {
+                var user = await _context.ThreadParticipants
+                    .Where(x => x.ThreadId == thread.Id)
+                    .Where(x => x.ParticipantId != requestorId)
+                    .Include(x => x.Participant)
+                    .FirstOrDefaultAsync();
+
+                 var message = await _context.Messages
+                    .Where(x => x.ThreadId == thread.Id)
+                    .OrderByDescending(x => x.MessageSent)
+                    .FirstOrDefaultAsync();
+
+                var threadDto = new ThreadDto() {
+                    UserOneId = requestorId,
+                    UserTwoId = user.ParticipantId,
+                    UserTwoPhotoUrl = user.Participant.PhotoUrl,
+                    LastModified = thread.LastModified,
+                    Content = message.Content
+                };
+
+                threadDtos.Add(threadDto);
+            }
+            
+
+            
+             return new PagedList<ThreadDto>(threadDtos, threadsNumber, listParams.PageNumber, listParams.PageSize);
+        }
+
+        public async Task<Thread> GetThread(int id)
+        {
+            return await _context.Threads
+                            .Where(x => x.Id == id)
+                            .Include(x => x.Messages)
+                            .Include(x => x.ThreadParticipants)
+                            .FirstOrDefaultAsync()
+            ;
         }
     }
 }

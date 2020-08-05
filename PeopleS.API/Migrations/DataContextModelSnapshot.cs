@@ -64,11 +64,16 @@ namespace PeopleS.API.Migrations
                     b.Property<int>("SenderId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("ThreadId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("RecipientId");
 
                     b.HasIndex("SenderId");
+
+                    b.HasIndex("ThreadId");
 
                     b.ToTable("Messages");
                 });
@@ -96,6 +101,38 @@ namespace PeopleS.API.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("PeopleS.API.Models.Thread", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("LastModified")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Threads");
+                });
+
+            modelBuilder.Entity("PeopleS.API.Models.ThreadParticipant", b =>
+                {
+                    b.Property<int>("ThreadId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ParticipantId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ThreadId", "ParticipantId");
+
+                    b.HasIndex("ParticipantId");
+
+                    b.ToTable("ThreadParticipants");
                 });
 
             modelBuilder.Entity("PeopleS.API.Models.User", b =>
@@ -193,6 +230,12 @@ namespace PeopleS.API.Migrations
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("PeopleS.API.Models.Thread", "Thread")
+                        .WithMany("Messages")
+                        .HasForeignKey("ThreadId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PeopleS.API.Models.Post", b =>
@@ -201,6 +244,21 @@ namespace PeopleS.API.Migrations
                         .WithMany("Posts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PeopleS.API.Models.ThreadParticipant", b =>
+                {
+                    b.HasOne("PeopleS.API.Models.User", "Participant")
+                        .WithMany("ThreadParticipants")
+                        .HasForeignKey("ParticipantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PeopleS.API.Models.Thread", "Thread")
+                        .WithMany("ThreadParticipants")
+                        .HasForeignKey("ThreadId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

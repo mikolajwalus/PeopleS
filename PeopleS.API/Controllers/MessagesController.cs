@@ -42,14 +42,11 @@ namespace PeopleS.API.Controllers
 
             var message = _mapper.Map<Message>(messageForCreationDto);
 
-            _repo.Add(message);
-
-            if (await _repo.SaveAll())
+            if( await _repo.CreateMessage(message) )
             {
                 var messageToReturn = _mapper.Map<MessageReturnDto>(message);
                 return CreatedAtRoute("GetMessage", new {userId, id = message.Id}, messageToReturn); 
             }
-
             
             throw new Exception("Creating the message failed on save");
         }
@@ -120,7 +117,9 @@ namespace PeopleS.API.Controllers
             if(sender.Id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
 
+
             var messageFromRepo = await _repo.GetMessage(messageId);
+
 
             if(messageFromRepo == null) 
                 return BadRequest("Message don't exist");
@@ -134,11 +133,45 @@ namespace PeopleS.API.Controllers
             if(userId == messageFromRepo.RecipientId) 
                 messageFromRepo.RecipientDeleted = true;
 
+
+            var threadId = messageFromRepo.ThreadId;
+
             if(messageFromRepo.RecipientDeleted && messageFromRepo.SenderDeleted) _repo.Delete(messageFromRepo);
 
             if( ! await _repo.SaveAll() ) return StatusCode(500);
 
+            var thread = await _repo.GetThread(threadId);
+
+            if(thread.Messages.Count == 0)
+            {
+                foreach (ThreadParticipant participant in thread.ThreadParticipants)
+                {
+                    _repo.Delete(participant);
+                }
+
+                if( ! await _repo.SaveAll() ) return StatusCode(500);
+
+                _repo.Delete(thread);
+                
+                if( ! await _repo.SaveAll() ) return StatusCode(500);
+            }
+
             return Ok();
+        }
+
+        [HttpGet("userThreads")]
+        public async Task<IActionResult> GetUserThreads(int userId, [FromQuery] ThreadListParams listParams)
+        {
+            var sender = await _repo.GetUser(userId);
+
+            if(sender.Id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+            
+            var threadsPagedList = await _repo.GetThreadList(userId, listParams);
+
+            if(threadsPagedList == null) return NoContent();
+
+            return Ok(threadsPagedList);
         }
     }
 }

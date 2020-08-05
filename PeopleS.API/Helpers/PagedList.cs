@@ -13,7 +13,7 @@ namespace PeopleS.API.Helpers
         public int PageSize { get; set; } = 5;
         public int TotalCount { get; set; }
 
-        public PagedList(List<T> items, int count, int pageNumber)
+        public PagedList(List<T> items, int count, int pageNumber, int pageSize = 5)
         {
             TotalCount = count;
             CurrentPage = pageNumber;
@@ -22,11 +22,11 @@ namespace PeopleS.API.Helpers
         }
 
         public static async Task<PagedList<T>> CreateAsync(IQueryable<T> source,
-        int pageNumber)
+        int pageNumber, int pageSize = 5)
         {
             var count = await source.CountAsync();
-            var items = await source.Skip((pageNumber - 1) * 5 ).Take(5).ToListAsync();
-            return new PagedList<T>(items, count, pageNumber);
+            var items = await source.Skip((pageNumber - 1) * pageSize ).Take(pageSize).ToListAsync();
+            return new PagedList<T>(items, count, pageNumber, pageSize);
         }
     }
 }

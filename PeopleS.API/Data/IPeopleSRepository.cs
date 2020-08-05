@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using PeopleS.API.Dtos;
 using PeopleS.API.Helpers;
 using PeopleS.API.Models;
 
@@ -18,8 +19,11 @@ namespace PeopleS.API.Data
         public Task<IEnumerable<Friendship>> GetUserFriendships(int id);
         public Task<int> GetFriendshipStatus(int recieverId, int requestorId);
         public Task<int> CreateFriendship(int recieverId, int requestorId);
+        public Task<bool> CreateMessage(Message message);
         public Task<Message> GetMessage(int id);
         public Task<PagedList<Message>> GetMessageThread(int requestorId, ThreadParams threadParams);
         public Task<bool> MarkThreadAsRead(int requestorId, int secondUserId);
+        public Task<PagedList<ThreadDto>> GetThreadList(int requestorId, ThreadListParams listParams);
+        public Task<Thread> GetThread(int id);
     }
 }

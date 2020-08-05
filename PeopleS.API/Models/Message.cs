@@ -15,5 +15,7 @@ namespace PeopleS.API.Models
         public DateTime MessageSent { get; set; }
         public bool SenderDeleted { get; set; }
         public bool RecipientDeleted { get; set; }
+        public int ThreadId { get; set; }
+        public Thread Thread { get; set; }
     }
 }
