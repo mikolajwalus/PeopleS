@@ -1,1 +1,48 @@
-<p>messages works!</p>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+            <div
+            class="search-results"
+            infiniteScroll
+            [infiniteScrollDistance]="2"
+            [infiniteScrollThrottle]="50"
+            [infiniteScrollContainer]="'#threads-box'"
+            [fromRoot]="true"
+            [scrollWindow]="false"
+            (scrolled)="onScroll()"
+            ></div>
+            <div class="col-3 border px-0" id="threads-box">
+                <div *ngFor="let thread of threads">
+                    <div class="
+                            thread-div
+                            d-flex flex-row 
+                            align-items-center 
+                            py-3 
+                            border-bottom
+                            justify-content-center 
+                            justify-content-lg-start"
+                        [ngStyle]="{'background-color': !thread.isRead && !thread.lastMessageIsMine? '#cceeff' : ''}"
+                        (click)="loadComponent(thread.userTwoId)">
+                        <div class="
+                            thread-picture 
+                            mr-lg-3
+                            ml-lg-3">
+                            <img src="{{thread.userTwoPhotoUrl}}" alt="" class="rounded-circle">
+                        </div>
+                        <div class="thread-text d-none d-lg-block">
+                            <div>
+                                <h5>{{thread.userTwoName}} {{thread.userTwoSurname}}</h5>
+                            </div>
+                            <div>
+                                <p [ngStyle]="{'font-weight': !thread.isRead && !thread.lastMessageIsMine? 'bold' : ''}">
+                                    <i *ngIf="thread.lastMessageIsMine" class="fa fa-arrow-right"></i>
+                                    {{ (thread.content.length>6)? (thread.content | slice:0:12)+'...':(thread.content) }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <app-message-thread></app-message-thread>
+            </div>
+    </div>
+</div>

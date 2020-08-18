@@ -42,6 +42,12 @@
     font-weight: bold;
 }
 
+.message-textarea {
+    height: 300px;
+    width: 100%;
+    max-width: 100%;
+}
+
 @media all and (min-width: 901px) {
 
     #user-name {

@@ -210,7 +210,7 @@ namespace PeopleS.API.Data
 
             var massage = await messagesThread.ToListAsync();
 
-            return await PagedList<Message>.CreateAsync(messagesThread, threadParams.PageNumber);
+            return await PagedList<Message>.CreateAsync(messagesThread, threadParams.PageNumber, threadParams.PageSize);
         }
 
         public async Task<bool> MarkThreadAsRead(int requestorId, int secondUserId)
@@ -273,12 +273,22 @@ namespace PeopleS.API.Data
                     .OrderByDescending(x => x.MessageSent)
                     .FirstOrDefaultAsync();
 
+                var lastMesageIsMine = true;
+                if( message.SenderId != requestorId ) lastMesageIsMine = false;
+
+                var isRead = true;
+                if( !message.IsRead ) isRead = false;
+
                 var threadDto = new ThreadDto() {
                     UserOneId = requestorId,
                     UserTwoId = user.ParticipantId,
+                    UserTwoName = user.Participant.Name,
+                    UserTwoSurname = user.Participant.Surname,
                     UserTwoPhotoUrl = user.Participant.PhotoUrl,
                     LastModified = thread.LastModified,
-                    Content = message.Content
+                    Content = message.Content,
+                    LastMessageIsMine = lastMesageIsMine,
+                    IsRead = isRead
                 };
 
                 threadDtos.Add(threadDto);

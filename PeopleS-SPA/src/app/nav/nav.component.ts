@@ -55,4 +55,8 @@ export class NavComponent implements OnInit {
   toSearch() {
     this.router.navigate(['search']);
   }
+
+  toMessages() {
+    this.router.navigate(['messages']);
+  }
 }

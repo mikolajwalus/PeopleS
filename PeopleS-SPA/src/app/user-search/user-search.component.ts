@@ -14,8 +14,7 @@ export class UserSearchComponent implements OnInit {constructor(
   private route: ActivatedRoute,
   private userService: UserService,
   private router: Router,
-  private spinner: NgxSpinnerService,
-  private authService: AuthService) { }
+  private spinner: NgxSpinnerService) { }
 
   query: string;
   queryForNextResults: string;

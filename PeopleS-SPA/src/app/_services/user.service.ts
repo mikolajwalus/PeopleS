@@ -42,8 +42,8 @@ export class UserService {
 
   searchUsers(query: string, pageNumber: number){
     const params = new HttpParams()
-    .set('searchedString', query)
-    .set('pageNumber', pageNumber.toString());
+      .set('searchedString', query)
+      .set('pageNumber', pageNumber.toString());
 
     return this.http.get<UserSearch[]>(this.baseUrl + 'users/' + 'search', { params });
   }

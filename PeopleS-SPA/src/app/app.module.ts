@@ -8,6 +8,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { JwtModule } from '@auth0/angular-jwt';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { AlertModule } from 'ngx-bootstrap/alert';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -26,6 +28,8 @@ import { AuthService } from './_services/auth.service';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { UserSearchComponent } from './user-search/user-search.component';
 import { MessagesComponent } from './messages/messages.component';
+import { MessageService } from './_services/message.service';
+import { MessageThreadComponent } from './message-thread/message-thread.component';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -42,7 +46,8 @@ export function tokenGetter() {
       UserEditorComponent,
       UserProfileComponent,
       UserSearchComponent,
-      MessagesComponent
+      MessagesComponent,
+      MessageThreadComponent,
    ],
    imports: [
       BrowserModule,
@@ -62,14 +67,17 @@ export function tokenGetter() {
       }),
       InfiniteScrollModule,
       NgxSpinnerModule,
+      ModalModule.forRoot(),
+      AlertModule.forRoot(),
    ],
    providers: [
       AuthService,
+      MessageService,
       ValuesService,
       AlertifyService,
       UserService,
       AuthGuard,
-      LoggedGuard
+      LoggedGuard,
    ],
    bootstrap: [
       AppComponent

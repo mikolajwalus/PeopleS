@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../_services/user.service';
@@ -7,32 +7,48 @@ import { Post } from 'src/app/_models/post';
 import { map } from 'rxjs/operators';
 import { UserProfile } from '../_models/user-profile';
 import { User } from '../_models/User';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { MessageService } from '../_services/message.service';
+import { MessageToSend } from '../_models/messageToSend';
 
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css']
 })
-export class UserProfileComponent implements OnInit {  constructor(
-  private route: ActivatedRoute,
-  private spinner: NgxSpinnerService,
-  private userService: UserService,
-  private authService: AuthService
+export class UserProfileComponent implements OnInit {
+
+  modalRef: BsModalRef;
+  visible: boolean[] = [true, false, false];
+  user: User;
+  allpost: Post[];
+  notEmptyPost = true;
+  notscrolly = true;
+  currentPage: number;
+  content = '';
+  emptyMessage = false;
+  isMe = false;
+
+ constructor(
+    private route: ActivatedRoute,
+    private spinner: NgxSpinnerService,
+    private userService: UserService,
+    private authService: AuthService,
+    private modalService: BsModalService,
+    private messageService: MessageService
   ) {
 }
-visible: boolean[] = [true, false, false];
-user: User;
-allpost: Post[];
-notEmptyPost = true;
-notscrolly = true;
-currentPage: number;
+
   ngOnInit() {
     this.route.data.pipe(
     ).subscribe( data => {
       this.allpost = data.userprofile.posts;
       this.user = data.userprofile.user;
-  });
-  this.currentPage = 1;
+      if (this.user.id.toString() === this.authService.getToken().nameid) {
+        this.isMe = true;
+      }
+    });
+    this.currentPage = 1;
 }
 
 onScroll() {
@@ -74,6 +90,28 @@ menu(choice: number) {
 
 postsRecieved(): boolean{
   return !(Object.keys(this.allpost).length === 0);
+}
+
+createModal( template: TemplateRef<any> ) {
+  this.emptyMessage = false;
+  this.modalRef = this.modalService.show(template);
+}
+
+sendMessage() {
+  if (this.content.length === 0)
+  {
+    this.emptyMessage = true;
+    return;
+  }
+
+  const message: MessageToSend = {
+    senderId: this.authService.getToken().nameid,
+    recipientId: this.user.id,
+    content: this.content
+  };
+
+  this.messageService.SendMessage(message).subscribe();
+  this.modalRef.hide();
 }
 
 }

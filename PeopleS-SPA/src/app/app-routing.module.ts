@@ -11,6 +11,8 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
 import { UserProfile } from './_resolvers/user-profile.resolver';
 import { UserSearchComponent } from './user-search/user-search.component';
 import { UserSearcher } from './_resolvers/user-search.resolver';
+import { MessagesComponent } from './messages/messages.component';
+import { Messanger } from './_resolvers/message.resolver';
 
 
 const routes: Routes = [
@@ -19,6 +21,7 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'edit-profile', component: UserEditorComponent, resolve: {user: UserEditor} , canActivate: [AuthGuard] },
   { path: 'search', component: UserSearchComponent, canActivate: [AuthGuard]},
+  { path: 'messages', component: MessagesComponent, resolve: {messanger: Messanger}, canActivate: [AuthGuard]},
   { path: 'search/:q', component: UserSearchComponent, resolve: {userSearcher: UserSearcher}, canActivate: [AuthGuard]},
   { path: ':id', component: UserProfileComponent, resolve: {userprofile: UserProfile}, canActivate: [AuthGuard] },
   { path: '',   redirectTo: '/login', pathMatch: 'full' },
