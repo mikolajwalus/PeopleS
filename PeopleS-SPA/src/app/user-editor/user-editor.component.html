@@ -23,7 +23,7 @@
               <div class="row">
                 <div class="col-12 col-sm-auto mb-3">
                   <div class="mx-auto" style="width: 140px; height: 140px">
-                    <img src="{{user.photoUrl}}" alt="">
+                    <img src="{{user.photoUrl}}" alt="" style="width: 140px; height: 140px; object-fit: cover;">
                   </div>
                 </div>
                 <div class="col d-flex flex-column flex-sm-row justify-content-between mb-3">
@@ -61,10 +61,74 @@
                       </div>
                     </div>
                   </form>
+                  <div class="row" id="photo">
+                    <div class="col mb-4">
+                      <div class="row photo-form">
+                        <h4>Change Photo</h4>             
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th width="50%">Name</th>
+                                <th>Size</th>
+                                <th>Progress</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let item of uploader.queue">
+                                <td><strong>{{ item?.file?.name }}</strong></td>
+                                <td *ngIf="uploader.options.isHTML5" nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
+                                <td *ngIf="uploader.options.isHTML5">
+                                    <div class="progress" style="margin-bottom: 0;">
+                                        <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': item.progress + '%' }"></div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <span *ngIf="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                                    <span *ngIf="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                                    <span *ngIf="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                                </td>
+                                <td nowrap>
+                                    <button type="button" class="btn btn-success btn-xs"
+                                            (click)="item.upload()" [disabled]="item.isReady || item.isUploading || item.isSuccess">
+                                        <span class="glyphicon glyphicon-upload"></span> Upload
+                                    </button>
+                                    <button type="button" class="btn btn-warning btn-xs"
+                                            (click)="item.cancel()" [disabled]="!item.isUploading">
+                                        <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-xs"
+                                            (click)="item.remove()">
+                                        <span class="glyphicon glyphicon-trash"></span> Remove
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                      </div>
+                      <div class="row">
+                        <div class="col">
+                          <div class="row">
+                            <div ng2FileDrop
+                            [ngClass]="{'nv-file-over': hasBaseDropZoneOver}"
+                            (fileOver)="fileOverBase($event)"
+                            [uploader]="uploader"
+                            class="card bg-faded p-3 text-center mb-3 drop-zone">
+                           <i class="fa fa-upload fa-3x"></i>
+                           Drop photo here
+                            </div>
+                          </div>
+                          <div class="row">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <form class="form" [formGroup]="passwordForm">
                     <div class="row" id="password">
                       <div class="col-12 col-sm-6 mb-3">
-                        <div class="mb-2"><b>Change Password</b></div>
+                        <div class="mb-2"><h4>Change Password</h4></div>
                         <div class="row">
                           <div class="col">
                             <div class="form-group">
@@ -104,7 +168,7 @@
                   <form class="form" [formGroup]="dateForm">
                     <div class="row">
                       <div class="col-12 col-sm-6 mb-3" id="date">
-                        <div class="mb-2"><b>Change date of birth</b></div>
+                        <div class="mb-2"><h4>Change date of birth</h4></div>
                         <div class="row">
                           <div class="col d-flex justify-content-start">
                             <input type="text" 
@@ -131,7 +195,7 @@
                   <form class="form" [formGroup]="profileForm">
                     <div class="row" id="moreInfo">
                         <div class="col">
-                            <div class="mb-2"><b>More personal informations</b></div>
+                            <div class="mb-2"><h4>More personal informations</h4></div>
                             <div class="row">
                               <div class="col">
                                 <div class="form-group">

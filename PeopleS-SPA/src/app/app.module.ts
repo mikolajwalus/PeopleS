@@ -10,6 +10,8 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { AlertModule } from 'ngx-bootstrap/alert';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
+import { FileUploadModule } from 'ng2-file-upload';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -30,6 +32,8 @@ import { UserSearchComponent } from './user-search/user-search.component';
 import { MessagesComponent } from './messages/messages.component';
 import { MessageService } from './_services/message.service';
 import { MessageThreadComponent } from './message-thread/message-thread.component';
+import { FriendsComponent } from './friends/friends.component';
+
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -48,6 +52,7 @@ export function tokenGetter() {
       UserSearchComponent,
       MessagesComponent,
       MessageThreadComponent,
+      FriendsComponent,
    ],
    imports: [
       BrowserModule,
@@ -69,6 +74,8 @@ export function tokenGetter() {
       NgxSpinnerModule,
       ModalModule.forRoot(),
       AlertModule.forRoot(),
+      ButtonsModule.forRoot(),
+      FileUploadModule,
    ],
    providers: [
       AuthService,

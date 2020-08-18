@@ -110,7 +110,7 @@ sendMessage() {
     content: this.content
   };
 
-  this.messageService.SendMessage(message).subscribe();
+  this.messageService.sendMessage(message).subscribe();
   this.modalRef.hide();
 }
 

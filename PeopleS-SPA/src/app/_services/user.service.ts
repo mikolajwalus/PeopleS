@@ -5,6 +5,7 @@ import { User } from '../_models/User';
 import { UserSearch } from '../_models/user-search';
 import { AuthService } from './auth.service';
 import { Status } from '../_models/status';
+import { Post } from '../_models/post';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class UserService {
               private authService: AuthService) { }
 
   getUser(id: number) {
-    return this.http.get(this.baseUrl + 'users/' + id);
+    return this.http.get<User>(this.baseUrl + 'users/' + id);
   }
 
   updateUser(id: number, user: User) {
@@ -50,5 +51,41 @@ export class UserService {
 
   addFriend(friendId: number){
     return this.http.post<Status>(this.baseUrl + 'users/' + this.authService.getToken().nameid + '/addFriend/' + friendId , {});
+  }
+
+  getFriends(id: number, pageNumber: number, pageSize: number = 8) {
+    const params = new HttpParams()
+      .set('senderId', id.toString())
+      .set('pageNumber', pageNumber.toString())
+      .set('pageSize', pageSize.toString());
+
+    return this.http.get<UserSearch[]>(this.baseUrl + 'users/friends', { params });
+  }
+
+  getInvitations(id: number, pageNumber: number, pageSize: number = 8) {
+    const params = new HttpParams()
+      .set('senderId', id.toString())
+      .set('pageNumber', pageNumber.toString())
+      .set('pageSize', pageSize.toString());
+
+    return this.http.get<UserSearch[]>(this.baseUrl + 'users/userInvitations', { params });
+  }
+
+  getSentInvitation(id: number, pageNumber: number, pageSize: number = 8) {
+    const params = new HttpParams()
+      .set('senderId', id.toString())
+      .set('pageNumber', pageNumber.toString())
+      .set('pageSize', pageSize.toString());
+
+    return this.http.get<UserSearch[]>(this.baseUrl + 'users/invitedUsers', { params });
+  }
+
+  getUserDashboard(id: number, pageNumber: number, pageSize: number = 8) {
+    const params = new HttpParams()
+      .set('senderId', id.toString())
+      .set('pageNumber', pageNumber.toString())
+      .set('pageSize', pageSize.toString());
+
+    return this.http.get<Post[]>(this.baseUrl + 'users/dashboard', { params });
   }
 }

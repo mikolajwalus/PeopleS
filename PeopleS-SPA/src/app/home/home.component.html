@@ -1,3 +1,63 @@
-<p>
-  Home content goes here!
-</p>
+<div class="container-fluid">
+    <div class="row d-flex justify-content-center">
+        <div class="col-10 col-md-8">
+            <div class="card shadow my-4">
+                <div class="card-body">
+                    <div>
+                    <h4>Write new post</h4>
+                  </div>
+                  <div>
+                      <form class="bg-light">
+                          <textarea name="Text1" cols="40" rows="5" [(ngModel)]="content" placeholder="Write something :)" class="w-100"></textarea>
+                      </form>
+                      <alert *ngIf="emptyMessage" type="danger mt-2 text-center">
+                          <strong>Warning!</strong> You can't send empty message!
+                      </alert>
+                  </div>
+                    <div class="row ml-2">
+                        <p>Dodaj zdjęcie</p>
+                    </div>
+                    <div class="row ml-2">
+                        <input type="file" ng2FileSelect [uploader]="uploader"/>
+                    </div>
+                    <div class="row flex-row-reverse mr-4">
+                        <button class="btn btn-secondary" (click)="uploader.uploadItem(uploader.queue[0])" [disabled]="!uploader.getNotUploadedItems().length">CreatePost</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div
+    class="search-results"
+    infiniteScroll
+    [infiniteScrollDistance]="2"
+    [infiniteScrollThrottle]="50"
+    (scrolled)="onScroll()"
+    >
+      <div class="row d-flex justify-content-center">
+          <div class="col-10 col-md-8" *ngFor="let post of allpost">
+          
+              <div class="card shadow my-4">
+              <div class="card-body">
+                  <div class="row mb-3">
+                      <div class="col-2 post-img ml-3 mr-2 px-0 justify-content-center">
+                          <img src="{{post.user.photoUrl}}" alt="" class="img-fluid rounded-circle" style="max-width: 130px; max-height: 130px; object-fit: cover;">
+                      </div>
+                      <div class="col post pl-0">
+                          <h5 class="post-header">{{post.user.name}} {{post.user.surname}}</h5>
+                          <p class="post-header">{{post.dateOfCreation | date}}</p>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col">
+                          <p class="card-text">{{post.text}}</p>
+                      </div>
+                  </div>
+              </div>
+                  <img class="card-img-bottom" src="{{post.photo}}" alt="img">
+              </div>
+
+          </div>
+      </div>
+  </div>
+</div>

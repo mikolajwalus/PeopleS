@@ -1,0 +1,54 @@
+<div class="container-fluid">
+    <div class="row mt-5">
+        <div class="col"></div>
+        <div class="col-3 text-center">
+            <label class="btn btn-primary" [(ngModel)]="radioModel"
+            btnRadio="Friends" tabindex="0" role="button" (click)="loadFriends()"><h5>Friends</h5></label>
+        </div>
+        <div class="col-3 text-center">
+            <label class="btn btn-primary" [(ngModel)]="radioModel"
+            btnRadio="Sent Invitations" tabindex="0" role="button" (click)="loadSent()"><h5>Sent Invitations</h5></label>
+        </div>
+        <div class="col-3 text-center">
+            <label class="btn btn-primary" [(ngModel)]="radioModel"
+            btnRadio="Recived Invitatins" tabindex="0" role="button" (click)="loadRecieved()"><h5>Received Invitations</h5></label>
+        </div>
+        <div class="col"></div>
+    </div>
+    <div class="row">
+        <div
+        infiniteScroll
+        [infiniteScrollDistance]="2"
+        [infiniteScrollThrottle]="50"
+        (scrolled)="onScroll()"
+        class="col-9 mx-auto"
+        >
+            <div class="row mt-5" *ngFor="let user of users">
+                <div class="card shadow mx-auto">
+                    <div class="row pl-4">
+                        <div class="pl-3 mr-5 pr-0 py-4 justify-content-center">
+                            <img src="{{user.photoUrl}}" alt="" class="img-fluid rounded-circle" style="max-width: 130px; max-height: 130px; object-fit: cover;">
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="user-name">
+                                <a (click)="toProfile(user.id)"><h5 class="user-header">{{user.name}} {{user.surname}}</h5></a>
+                                <p class="user-header">{{user.city}} {{user.country}}</p>
+                            </div>
+                        </div>
+                        <div class="col"></div>
+                        <div class="col-3 col-md-2 d-flex align-items-center">
+                            <div class="w-100 mr-5">
+                                <button class="btn btn-primary btn-block"
+                                        title="Add to friend list"
+                                        *ngIf="radioModel === 'Recived Invitatins'"
+                                        (click)="addFriend(user)">
+                                        <span class="icon"><i class="fa fa-user-plus"></i></span>
+                                </button>
+                            </div>    
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

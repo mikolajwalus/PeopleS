@@ -43,7 +43,7 @@ export class MessageThreadComponent implements OnInit {
   }
 
   loadInitialMessages() {
-    this.messageService.GetMessageThread(this.secondUserId, 1, 10).subscribe( data => {
+    this.messageService.getMessageThread(this.secondUserId, 1, 10).subscribe( data => {
       this.messages = data.reverse();
     });
   }
@@ -63,7 +63,7 @@ export class MessageThreadComponent implements OnInit {
       content: this.content
     };
 
-    this.messageService.SendMessage(message)
+    this.messageService.sendMessage(message)
       .subscribe(data => {
         this.messages.push(data);
         this.content = "";
@@ -85,7 +85,7 @@ export class MessageThreadComponent implements OnInit {
   loadNextData() {
     this.currentPage += 1;
     console.log(this.currentPage);
-    this.messageService.GetMessageThread(this.secondUserId, this.currentPage, 10)
+    this.messageService.getMessageThread(this.secondUserId, this.currentPage, 10)
     .subscribe( (data) => {
       if (data.length === 0 ) {
         this.notEmptyPost =  false;

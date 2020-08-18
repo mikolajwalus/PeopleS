@@ -9,6 +9,12 @@ using PeopleS.API.Helpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Linq;
+using System.Collections.Generic;
+using CloudinaryDotNet.Actions;
+using CloudinaryDotNet;
+using Microsoft.Extensions.Options;
+using PeopleS.API.Models;
+using System;
 
 namespace PeopleS.API.Controllers
 {
@@ -20,11 +26,26 @@ namespace PeopleS.API.Controllers
         private readonly IPeopleSRepository _repo;
         private readonly IMapper _mapper;
         private readonly IAuthRepository _auth;
-        public UsersController(IPeopleSRepository repo, IMapper mapper, IAuthRepository auth)
+        private readonly IOptions<CloudinarySettings> _cloudinaryConfig;
+        private Cloudinary _cloudinary;
+        public UsersController(
+            IPeopleSRepository repo, 
+            IMapper mapper, 
+            IAuthRepository auth,
+            IOptions<CloudinarySettings> cloudinaryConfig)
         {
             _auth = auth;
             _mapper = mapper;
             _repo = repo;
+            _cloudinaryConfig = cloudinaryConfig;
+
+            Account acc = new Account(
+                _cloudinaryConfig.Value.CloudName,
+                _cloudinaryConfig.Value.ApiKey,
+                _cloudinaryConfig.Value.ApiSecret
+            );
+
+            _cloudinary = new Cloudinary(acc);
         }
 
         [HttpGet("{id}", Name = "GetUser")]
@@ -90,7 +111,7 @@ namespace PeopleS.API.Controllers
             return NoContent();
         }
 
-        [HttpPut("{id}/changeBirthDate+")]
+        [HttpPut("{id}/changeBirthDate")]
         public async Task<IActionResult> ChangeBirthDate(int id, [FromBody]UserDateDto dateObject)
         {
             var userId = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -206,6 +227,166 @@ namespace PeopleS.API.Controllers
 
 
             return Ok(objectToReturn);
+        }
+
+        [HttpGet("friends")]
+        public async Task<IActionResult> GetFriends([FromQuery] FriendParams friendParams)
+        {
+            var userId = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (userId != friendParams.SenderId) return Unauthorized();
+
+            var friendsFromRepo = await _repo.GetUserFriends(friendParams);
+
+            Response.AddPagination( friendsFromRepo.CurrentPage,
+                        friendsFromRepo.PageSize,
+                        friendsFromRepo.TotalCount,
+                        friendsFromRepo.TotalPages);
+
+            var usersForReturn = _mapper.Map<List<UserForSearchDto>>(friendsFromRepo);
+
+            return Ok(usersForReturn);
+        }
+
+        [HttpGet("invitedUsers")]
+        public async Task<IActionResult> GetInvitedUsers([FromQuery] FriendParams friendParams)
+        {
+            var userId = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (userId != friendParams.SenderId) return Unauthorized();
+
+            var usersFromRepo = await _repo.GetInvitedUsers(friendParams);
+
+            Response.AddPagination( usersFromRepo.CurrentPage,
+                        usersFromRepo.PageSize,
+                        usersFromRepo.TotalCount,
+                        usersFromRepo.TotalPages);
+
+            var usersForReturn = _mapper.Map<List<UserForSearchDto>>(usersFromRepo);
+
+            return Ok(usersForReturn);
+        }
+
+        [HttpGet("userInvitations")]
+        public async Task<IActionResult> GetUserInvitations([FromQuery] FriendParams friendParams)
+        {
+            var userId = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (userId != friendParams.SenderId) return Unauthorized();
+            
+            var usersFromRepo = await _repo.GetUserInvitations(friendParams);
+
+            Response.AddPagination( 
+                usersFromRepo.CurrentPage,
+                usersFromRepo.PageSize,
+                usersFromRepo.TotalCount,
+                usersFromRepo.TotalPages);
+
+            var usersForReturn = _mapper.Map<List<UserForSearchDto>>(usersFromRepo);
+
+            return Ok(usersForReturn);
+        }
+
+        [HttpPost("{id}/changePhoto")]
+        public async Task<IActionResult> AddPhotoForUser(int id, [FromForm]PhotoForCreationDto photoForCreationDto)
+        {
+            if (photoForCreationDto.File == null) return BadRequest("No file have been sent");
+
+            var userId = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (userId != id) return Unauthorized();
+
+            var userFromRepo = await _repo.GetUser(id);
+
+            var file = photoForCreationDto.File;
+
+            if (file.Length == 0) return BadRequest("Empty file sent");
+
+            var uploadResult = new ImageUploadResult();
+
+            if (file.Length > 0)
+            {
+                using (var stream = file.OpenReadStream())
+                {
+                    var uploadParams = new ImageUploadParams()
+                    {
+                        File = new FileDescription(file.Name, stream)
+                    };
+
+                    uploadResult = _cloudinary.Upload(uploadParams);
+                }
+            }
+
+            userFromRepo.PhotoUrl = uploadResult.Url.ToString();
+            userFromRepo.PublicId = uploadResult.PublicId;
+
+            if( await _repo.SaveAll() )
+            {
+                return Ok();
+            }
+
+            return BadRequest("Could not add the photo");
+        }
+
+        [HttpGet("dashboard")]
+        public async Task<IActionResult> GetMainSitePosts([FromQuery]PostParams postParams)
+        {
+            var userId = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (userId != postParams.SenderId) return Unauthorized();
+
+            var postsFromRepo = await _repo.GetUserDashboard(postParams);
+
+            var postsForReturn = _mapper.Map<List<PostDto>>(postsFromRepo);
+
+            Response.AddPagination( 
+                postsFromRepo.CurrentPage,
+                postsFromRepo.PageSize,
+                postsFromRepo.TotalCount,
+                postsFromRepo.TotalPages);
+
+            return Ok(postsForReturn);
+        }
+
+        [HttpPost("addPost")]
+        public async Task<IActionResult> AddPost([FromForm]PostForCreationDto postForCreationDto)
+        {
+            var userId = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (userId != postForCreationDto.UserId) return Unauthorized();
+
+            var file = postForCreationDto.File;
+
+            var uploadResult = new ImageUploadResult();
+
+            if (file.Length > 0)
+            {
+                using (var stream = file.OpenReadStream())
+                {
+                    var uploadParams = new ImageUploadParams()
+                    {
+                        File = new FileDescription(file.Name, stream)
+                    };
+
+                    uploadResult = _cloudinary.Upload(uploadParams);
+                }
+            }
+
+            var post = new Post() {
+                UserId = postForCreationDto.UserId,
+                DateOfCreation = DateTime.Now,
+                Text = postForCreationDto.Text,
+                Photo = uploadResult.Url.ToString()
+            };
+
+            _repo.Add(post);
+
+            if( await _repo.SaveAll() )
+            {
+                return Ok();
+            }
+
+            return BadRequest("Could not add post");
         }
     }
 }

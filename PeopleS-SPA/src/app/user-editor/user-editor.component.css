@@ -7,3 +7,16 @@
     text-decoration: underline;
     color: #013164;
  }
+
+ .drop-zone {
+    height: 100px;
+    width: 100%;
+    border: dotted 3px lightgray; 
+ }
+
+ .nv-file-over { border: dotted 3px red; }
+
+ .photo-form {
+    padding-left: 15px;
+    padding-right: 15px;
+ }

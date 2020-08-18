@@ -5,8 +5,9 @@ import { User } from '../_models/User';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../_services/auth.service';
 import { AlertifyService } from '../_services/alertify.service';
-import { stringify } from 'querystring';
+import { FileUploader } from 'ng2-file-upload';
 import { DatePipe } from '@angular/common';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -26,6 +27,9 @@ export class UserEditorComponent implements OnInit {
   profileForm: FormGroup;
   maxDate = new Date();
   user: User;
+  uploader: FileUploader;
+  baseUrl = environment.apiUrl;
+  hasBaseDropZoneOver: boolean;
 
   constructor(  private userService: UserService,
                 private route: ActivatedRoute,
@@ -45,6 +49,31 @@ export class UserEditorComponent implements OnInit {
     this.createPasswordForm();
     this.createDateForm();
     this.createProfileForm();
+    this.initializeUploader();
+  }
+
+  public fileOverBase(e: any): void {
+    this.hasBaseDropZoneOver = e;
+  }
+
+  initializeUploader() {
+    this.uploader = new FileUploader({
+      url: this.baseUrl + 'users/' + this.authService.getToken().nameid + '/changePhoto',
+      authToken: 'Bearer ' + localStorage.getItem('token'),
+      isHTML5: true,
+      allowedFileType: ['image'],
+      removeAfterUpload: true,
+      autoUpload: false,
+      maxFileSize: 10 * 1024 * 1024,
+    });
+
+    this.uploader.onAfterAddingFile = (file) => {file.withCredentials = false; };
+
+    this.uploader.onSuccessItem = (item, response, status, headers) => {
+      this.userService.getUser(this.authService.getToken().nameid). subscribe( data => {
+        this.user = data;
+      })
+    };
   }
 
   createEmailForm() {

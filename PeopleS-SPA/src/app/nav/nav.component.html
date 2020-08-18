@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-md navbar-dark sticky-top bg-dark">
-  <a class="navbar-brand"><h2><i class="fa fa-users"></i>  PeopleS</h2></a>
+  <a class="navbar-brand" (click)="toHome()"><h2><i class="fa fa-users"></i>  PeopleS</h2></a>
 
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
     <div class="mr-auto">
@@ -15,7 +15,7 @@
     <div class="btn-group" role="group">
       <button type="button" class="btn btn-secondary" (click)="toProfile()"><i class="fa fa-edit"></i> My profile</button>
       <button type="button" class="btn btn-secondary" (click)="toMessages()"><i class="fa fa-comment"></i></button>
-      <button type="button" class="btn btn-secondary"><i class="fa fa-user"></i></button>
+      <button type="button" class="btn btn-secondary" (click)="toFriends()"><i class="fa fa-user"></i></button>
       <button type="button" class="btn btn-secondary" (click)="toSearch()"><i class="fa fa-search"></i></button>
     
       <div class="btn-group" dropdown>

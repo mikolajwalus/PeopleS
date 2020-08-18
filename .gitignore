@@ -53,3 +53,4 @@ obj/
 *.dll
 *.exe
 *.pdb
+/PeopleS.API/appsettings.json

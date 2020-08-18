@@ -19,11 +19,11 @@ export class MessageService {
 
   constructor( private http: HttpClient, private authService: AuthService) { }
 
-  ChangeCurrentMessageThread(id: number) {
+  changeCurrentMessageThread(id: number) {
     this.currentThread.next(id);
   }
 
-  GetUserThreads(pageNumber: number, pageSize: number = 10) {
+  getUserThreads(pageNumber: number, pageSize: number = 10) {
     const params = new HttpParams()
       .set( 'pageNumber', pageNumber.toString() )
       .set( 'pageSize', pageSize.toString() );
@@ -32,7 +32,7 @@ export class MessageService {
       this.baseUrl + 'users/' + this.authService.getToken().nameid + '/messages/userThreads', { params });
   }
 
-  GetMessageThread(id: number, pageNumber: number, pageSize: number = 8) {
+  getMessageThread(id: number, pageNumber: number, pageSize: number = 8) {
 
     const params = new HttpParams()
       .set( 'secondUserId', id.toString() )
@@ -43,7 +43,12 @@ export class MessageService {
       this.baseUrl + 'users/' + this.authService.getToken().nameid + '/messages/thread', { params });
   }
 
-  SendMessage(message: MessageToSend) {
+  sendMessage(message: MessageToSend) {
     return this.http.post<Message>( this.baseUrl + 'users/' + this.authService.getToken().nameid + '/messages/', message );
+  }
+
+  markThreadAsRead(secondUserId: number) {
+    return this.http.put( this.baseUrl + 'users/' + this.authService.getToken().nameid + '/messages/threadRead/' + secondUserId,
+    {} );
   }
 }

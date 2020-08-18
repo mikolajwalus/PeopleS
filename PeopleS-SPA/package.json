@@ -23,6 +23,7 @@
     "alertifyjs": "^1.13.1",
     "bootstrap": "^4.5.0",
     "font-awesome": "^4.7.0",
+    "ng2-file-upload": "^1.4.0",
     "ngx-bootstrap": "^5.6.1",
     "ngx-infinite-scroll": "^9.0.0",
     "ngx-spinner": "^10.0.1",

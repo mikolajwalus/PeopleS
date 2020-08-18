@@ -23,15 +23,30 @@ export class MessagesComponent implements OnInit {
 
   currentPage = 1;
 
+  firstTime = true;
+
   ngOnInit(): void {
     this.route.data.subscribe( data => {
       this.threads = data.messanger;
       this.loadComponent(this.threads[0].userTwoId);
+      console.log(this.threads[0]);
+      if (!this.threads[0].isRead && !this.threads[0].lastMessageIsMine) {
+        console.log("Inside");
+        this.messageService.markThreadAsRead(this.threads[0].userTwoId).subscribe();
+      }
+      this.firstTime = false;
     });
   }
 
   loadComponent(id: number){
-    this.messageService.ChangeCurrentMessageThread(id);
+    this.messageService.changeCurrentMessageThread(id);
+    if (!this.firstTime) {
+      this.messageService.markThreadAsRead(id).subscribe();
+      this.messageService.getUserThreads(1).subscribe( data => {
+        this.threads = data;
+      });
+    }
+    console.log(this.threads);
   }
 
   onScroll() {
@@ -45,7 +60,7 @@ export class MessagesComponent implements OnInit {
   loadNextData() {
     this.currentPage += 1;
     console.log(this.currentPage);
-    this.messageService.GetUserThreads(this.currentPage)
+    this.messageService.getUserThreads(this.currentPage)
     .subscribe( (data) => {
       console.log(data);
       if (data.length === 0 ) {

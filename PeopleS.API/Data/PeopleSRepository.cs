@@ -46,21 +46,21 @@ namespace PeopleS.API.Data
         public async Task<PagedList<Post>> GetUserPosts( PostParams postParams )
         {
             var posts = _context.Posts
-                            .Where( x => x.UserId == postParams.SenderId)
-                            .OrderByDescending( x => x.DateOfCreation)
-                            .Include(x => x.User);
+                .Where( x => x.UserId == postParams.SenderId)
+                .OrderByDescending( x => x.DateOfCreation)
+                .Include(x => x.User);
             return await PagedList<Post>.CreateAsync(posts, postParams.PageNumber);
         }
 
         public async Task<PagedList<User>> SearchUser(UserParams userParams)
         {
             string trimmedString = userParams.SearchedString.Replace(" ","").ToLower();
-            var users = _context.Users.Where( x => 
-                x.Name.ToLower().Contains(trimmedString) ||
-                x.Surname.ToLower().Contains(trimmedString) ||
-                string.Concat(x.Name.ToLower(), x.Surname.ToLower()).Contains(trimmedString)
-            ).Include(x => x.FriendsRecieved)
-            .Include(x => x.FriendsRequested);
+            var users = _context.Users
+                .Where( x => x.Name.ToLower().Contains(trimmedString) ||
+                    x.Surname.ToLower().Contains(trimmedString) ||
+                    string.Concat(x.Name.ToLower(), x.Surname.ToLower()).Contains(trimmedString))
+                .Include(x => x.FriendsRecieved)
+                .Include(x => x.FriendsRequested);
             return await PagedList<User>.CreateAsync(users, userParams.PageNumber);
         }
 
@@ -73,11 +73,11 @@ namespace PeopleS.API.Data
 
         public async Task<IEnumerable<Friendship>> GetUserFriendships(int id)
         {
-            return await _context.Friendships.Where( x => 
-                (x.Reciever.Id == id || x.Requestor.Id == id) && x.Status == 1
-            ).Include(x => x.Requestor)
-            .Include(x => x.Reciever)
-            .ToListAsync();
+            return await _context.Friendships
+                .Where( x => (x.Reciever.Id == id || x.Requestor.Id == id) && x.Status == 1)
+                .Include(x => x.Requestor)
+                .Include(x => x.Reciever)
+                .ToListAsync();
         }
 
         /// <summary>
@@ -97,9 +97,9 @@ namespace PeopleS.API.Data
             if(recieverId == requestorId) return 4;
 
             var status = await _context.Friendships
-            .Where(x => ( x.RecieverId == recieverId && x.RequestorId == requestorId ) ||
-                        ( x.RecieverId == requestorId && x.RequestorId == recieverId ) )
-            .FirstOrDefaultAsync();
+                .Where(x => ( x.RecieverId == recieverId && x.RequestorId == requestorId ) ||
+                            ( x.RecieverId == requestorId && x.RequestorId == recieverId ) )
+                .FirstOrDefaultAsync();
 
             if( status == null) return 3;
 
@@ -110,9 +110,9 @@ namespace PeopleS.API.Data
         public async Task<int> CreateFriendship(int recieverId, int requestorId)
         {
             var friendshipFromRepo = await _context.Friendships
-            .Where( x => (x.RecieverId == recieverId && x.RequestorId == requestorId)
-                      || (x.RecieverId == requestorId && x.RequestorId == recieverId))
-            .FirstOrDefaultAsync();
+                .Where( x => (x.RecieverId == recieverId && x.RequestorId == requestorId)
+                        || (x.RecieverId == requestorId && x.RequestorId == recieverId))
+                .FirstOrDefaultAsync();
 
             if(friendshipFromRepo == null)
             {
@@ -144,12 +144,41 @@ namespace PeopleS.API.Data
 
             return 1;
         }
+
+        public Task<PagedList<User>> GetUserFriends(FriendParams friendParams)
+        {
+            var friends = _context.Users
+                .Where( x => 
+                    x.FriendsRequested.Any( z => z.RecieverId == friendParams.SenderId && z.Status == 1) 
+                    || x.FriendsRecieved.Any( z => z.RequestorId == friendParams.SenderId && z.Status == 1))
+                .OrderBy( x => x.Surname);
+
+            return PagedList<User>.CreateAsync(friends, friendParams.PageNumber, friendParams.PageSize);
+        }
+
+        public Task<PagedList<User>> GetInvitedUsers(FriendParams friendParams)
+        {
+            var invitedFriends = _context.Users
+                .Where( x => x.FriendsRecieved.Any( z => z.RequestorId == friendParams.SenderId && z.Status == 0))
+                .OrderBy( x => x.Surname);
+
+            return PagedList<User>.CreateAsync(invitedFriends, friendParams.PageNumber, friendParams.PageSize);
+        }
+
+        public Task<PagedList<User>> GetUserInvitations(FriendParams friendParams)
+        {
+            var invitedFriends = _context.Users
+                .Where( x => x.FriendsRequested.Any( z => z.RecieverId == friendParams.SenderId && z.Status == 0))
+                .OrderBy( x => x.Surname);
+
+            return PagedList<User>.CreateAsync(invitedFriends, friendParams.PageNumber, friendParams.PageSize);
+        }
         
         public async Task<bool> CreateMessage(Message message)
         {
             var thread = _context.Threads
                     .Where(x => x.ThreadParticipants.Where(y => y.ParticipantId == message.SenderId).FirstOrDefault() != null && 
-                                x.ThreadParticipants.Where(y => y.ParticipantId == message.RecipientId).FirstOrDefault() != null)
+                        x.ThreadParticipants.Where(y => y.ParticipantId == message.RecipientId).FirstOrDefault() != null)
                     .Include(x => x.Messages)
                     .Include(x => x.ThreadParticipants)
                     .FirstOrDefault();
@@ -202,8 +231,8 @@ namespace PeopleS.API.Data
         public async Task<PagedList<Message>> GetMessageThread(int requestorId, ThreadParams threadParams)
         {
             var messagesThread = _context.Messages.Where( x => 
-                (x.RecipientId == requestorId && x.SenderId == threadParams.SecondUserId) ||
-                (x.RecipientId == threadParams.SecondUserId && x.SenderId == requestorId))
+                    (x.RecipientId == requestorId && x.SenderId == threadParams.SecondUserId) ||
+                    (x.RecipientId == threadParams.SecondUserId && x.SenderId == requestorId))
                 .Include( x => x.Sender)
                 .Include( x => x.Recipient)
                 .OrderByDescending(x => x.MessageSent);
@@ -215,10 +244,10 @@ namespace PeopleS.API.Data
 
         public async Task<bool> MarkThreadAsRead(int requestorId, int secondUserId)
         {
-                var messagesThread = await _context.Messages.Where( x => 
-                (x.RecipientId == requestorId && x.SenderId == secondUserId))
-                .Where(x => !x.IsRead)
-                .ToListAsync();
+                var messagesThread = await _context.Messages
+                    .Where( x => (x.RecipientId == requestorId && x.SenderId == secondUserId))
+                    .Where(x => !x.IsRead)
+                    .ToListAsync();
 
                 if(messagesThread.Count == 0) return false;
 
@@ -228,8 +257,8 @@ namespace PeopleS.API.Data
                     message.IsRead = true;
                 }
 
-                var requestor = await _context.ThreadParticipants.Where( x => 
-                        x.ThreadId == messagesThread.FirstOrDefault().ThreadId && x.ParticipantId == requestorId )
+                var requestor = await _context.ThreadParticipants
+                    .Where( x => x.ThreadId == messagesThread.FirstOrDefault().ThreadId && x.ParticipantId == requestorId )
                     .FirstOrDefaultAsync();
 
                 requestor.Status = true;
@@ -302,11 +331,24 @@ namespace PeopleS.API.Data
         public async Task<Thread> GetThread(int id)
         {
             return await _context.Threads
-                            .Where(x => x.Id == id)
-                            .Include(x => x.Messages)
-                            .Include(x => x.ThreadParticipants)
-                            .FirstOrDefaultAsync()
+                .Where(x => x.Id == id)
+                .Include(x => x.Messages)
+                .Include(x => x.ThreadParticipants)
+                .FirstOrDefaultAsync()
             ;
+        }
+
+        public async Task<PagedList<Post>> GetUserDashboard(PostParams postParams)
+        {
+            var posts = _context.Posts
+                .Where(x => x.User.FriendsRecieved
+                    .Any( y => y.RequestorId == postParams.SenderId && y.Status == 1) || 
+                x.User.FriendsRequested
+                    .Any( y => y.RecieverId == postParams.SenderId && y.Status == 1))
+                .OrderByDescending(x => x.DateOfCreation)
+                .Include(x => x.User);
+
+            return await PagedList<Post>.CreateAsync(posts, postParams.PageNumber, postParams.PageSize);
         }
     }
 }

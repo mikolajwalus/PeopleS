@@ -14,14 +14,15 @@ import { MessageService } from '../_services/message.service';
 })
 
 
-export class Messanger implements Resolve<any> {
+export class Friender implements Resolve<any> {
 
-    constructor(    private messageService: MessageService,
+    constructor(    private userService: UserService,
                     private alertify: AlertifyService,
-                    private router: Router) { }
+                    private router: Router,
+                    private authService: AuthService) { }
 
   resolve( router: ActivatedRouteSnapshot ) {
-    return this.messageService.getUserThreads(1)
+    return this.userService.getFriends( this.authService.getToken().nameid, 1 )
         .pipe(
             catchError( error => {
             this.alertify.error(error.error);

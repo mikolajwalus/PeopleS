@@ -59,4 +59,12 @@ export class NavComponent implements OnInit {
   toMessages() {
     this.router.navigate(['messages']);
   }
+
+  toFriends() {
+    this.router.navigate(['friends']);
+  }
+
+  toHome() {
+    this.router.navigate(['home']);
+  }
 }
