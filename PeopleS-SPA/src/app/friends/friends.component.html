@@ -1,16 +1,16 @@
 <div class="container-fluid">
     <div class="row mt-5">
         <div class="col"></div>
-        <div class="col-3 text-center">
-            <label class="btn btn-primary" [(ngModel)]="radioModel"
+        <div class="col-12 col-sm-3 sm-text-center ml-5 ml-sm-0">
+            <label class="btn btn-secondary" [(ngModel)]="radioModel"
             btnRadio="Friends" tabindex="0" role="button" (click)="loadFriends()"><h5>Friends</h5></label>
         </div>
-        <div class="col-3 text-center">
-            <label class="btn btn-primary" [(ngModel)]="radioModel"
+        <div class="col-12 col-sm-3 sm-text-center ml-5 ml-sm-0">
+            <label class="btn btn-secondary" [(ngModel)]="radioModel"
             btnRadio="Sent Invitations" tabindex="0" role="button" (click)="loadSent()"><h5>Sent Invitations</h5></label>
         </div>
-        <div class="col-3 text-center">
-            <label class="btn btn-primary" [(ngModel)]="radioModel"
+        <div class="col-12 col-sm-3 sm-text-center ml-5 ml-sm-0">
+            <label class="btn btn-secondary" [(ngModel)]="radioModel"
             btnRadio="Recived Invitatins" tabindex="0" role="button" (click)="loadRecieved()"><h5>Received Invitations</h5></label>
         </div>
         <div class="col"></div>
@@ -27,7 +27,7 @@
                 <div class="card shadow mx-auto">
                     <div class="row pl-4">
                         <div class="pl-3 mr-5 pr-0 py-4 justify-content-center">
-                            <img src="{{user.photoUrl}}" alt="" class="img-fluid rounded-circle" style="max-width: 130px; max-height: 130px; object-fit: cover;">
+                            <img src="{{user.photoUrl}}" alt="" class="img-fluid rounded-circle" style="height: 110px; width: 110px; object-fit: cover;">
                         </div>
                         <div class="d-flex align-items-center">
                             <div class="user-name">

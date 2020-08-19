@@ -11,7 +11,7 @@
     ></div>
     <div class="px-4 py-5 bg-white" id="chat-box">
         <div *ngFor="let message of messages">
-            <div *ngIf="!isMine(message)" class="media w-50 mb-3"><img src="{{message.senderPhotoUrl}}" alt="user" width="50" class="rounded-circle">
+            <div *ngIf="!isMine(message)" class="media w-50 mb-3"><img src="{{message.senderPhotoUrl}}" alt="user" width="50" height="50" class="rounded-circle" style="object-fit: cover;">
                 <div class="media-body ml-3">
                   <div class="bg-light rounded py-2 px-3 mb-2">
                     <p class="text-small mb-0 text-muted">{{message.content}}</p>

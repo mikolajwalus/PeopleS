@@ -54,7 +54,7 @@ export class HomeComponent implements OnInit {
   });
 
   this.uploader.onBuildItemForm = (fileItem: any, form: any) => {
-    form.append('text', this.content); //note comma separating key and value
+    form.append('text', this.content);
     form.append('userId', this.authService.getToken().nameid.toString());
    };
 
