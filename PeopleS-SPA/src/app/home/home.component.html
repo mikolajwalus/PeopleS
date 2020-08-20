@@ -15,13 +15,13 @@
                       </alert>
                   </div>
                     <div class="row ml-2">
-                        <p>Dodaj zdjęcie</p>
+                        <p>Add photo</p>
                     </div>
                     <div class="row ml-2">
                         <input type="file" ng2FileSelect [uploader]="uploader"/>
                     </div>
                     <div class="row flex-row-reverse mr-4">
-                        <button class="btn btn-secondary" (click)="uploader.uploadItem(uploader.queue[0])" [disabled]="!uploader.getNotUploadedItems().length">CreatePost</button>
+                        <button class="btn btn-secondary" (click)="uploader.uploadItem(uploader.queue[0])" [disabled]="!uploader.getNotUploadedItems().length">Create Post</button>
                     </div>
                 </div>
             </div>
