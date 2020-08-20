@@ -22,11 +22,10 @@
 * [Technologies](#technologies)
 * [Content presentation](#content-presentation)
     * [Register and login forms](#register-and-login-forms)
-* [Getting Started](#getting-started)
-  * [Prerequisites](#prerequisites)
-  * [Installation](#installation)
-* [Roadmap](#roadmap)
-* [Contributing](#contributing)
+    * [User profile and editing](#user-profile-and-editing)
+    * [User post creating and browsing](#user-post-creating-and-browsing)
+    * [User searching and sending "friend" invitation](#user-searching-and-sending-"friend"-invitation)
+    * [Texting users](#texting-user)
 * [License](#license)
 * [Contact](#contact)
 * [Acknowledgements](#acknowledgements)
@@ -62,7 +61,7 @@ This is web application which provide users functionalities such as:
 
 ## Register and login forms
 
-### Implemented forms to standard register and login procedures.
+#### Implemented forms to standard register and login procedures.
 
 ![](https://res.cloudinary.com/dlio1dtmu/image/upload/v1597961472/register_fdymss.png)
 
@@ -70,7 +69,7 @@ This is web application which provide users functionalities such as:
 
 ## User profile and editing
 
-### User can easly edit his profile. He can change password or other personal information. There is also form to uploading new profile photos.
+#### User can easly edit his profile. He can change password or other personal information. There is also form to uploading new profile photos.
 
 ![](https://res.cloudinary.com/dlio1dtmu/image/upload/v1597961115/edit_profile_s3iji7.gif)
 
@@ -78,7 +77,7 @@ This is web application which provide users functionalities such as:
 
 ## User post creating and browsing
 
-### User can easly create new post. With the "infinite scroll" he can also easly browse the post and this solution is good for backend application in case of efficiency.
+#### User can easly create new post. With the "infinite scroll" he can also easly browse the post and this solution is good for backend application in case of efficiency.
 
 ![](https://res.cloudinary.com/dlio1dtmu/image/upload/v1597961593/posts_dw5npa.png)
 
@@ -86,13 +85,13 @@ This is web application which provide users functionalities such as:
 
 ## User searching and sending "friend" invitation
 
-### User can search for others using created search engine. He can send them invitation. He can also preview his current friends or invitation sent to him and by him.
+#### User can search for others using created search engine. He can send them invitation. He can also preview his current friends or invitation sent to him and by him.
 
 ![](https://res.cloudinary.com/dlio1dtmu/image/upload/v1597961115/friend_search_nhxkhz.gif)
 
 ## Texting users
 
-### Provided functionality of texting users. Again used infinite scroll for efficiency-focused approach
+#### Provided functionality of texting users. Again used infinite scroll for efficiency-focused approach
 
 ![](https://res.cloudinary.com/dlio1dtmu/image/upload/v1597961466/message_n5crqf.png)
 
