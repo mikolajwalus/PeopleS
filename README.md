@@ -8,7 +8,7 @@
   <h2 align="center">People Soft - Best App for people</h2>
 
   <p align="center">
-    An awesome App for community to stay in touch with friends.
+    An awesome App to create your community and stay in touch with your friends
     <br />
   </p>
 </p>
@@ -35,17 +35,15 @@
 <!-- ABOUT THE PROJECT -->
 # About The Project
 
+PeopleS that I created is inspired by a world-renowned Facebook app. I’ve treated it as a challenge to test my skills and to expand them further. 
+I present you a web application which provides its users with functionalities such as:
 
-I created PeopleS inspired by Facebook and I treated it as challange to test my skills and extend them.
+- creating and modifying the user’s account with personal information
+- making friends and building social networks
+- looking over profiles of other users
+- scrolling through the main page containing posts published by the user’s friends
+- searching other users and making contact with them
 
-This is web application which provide users functionalities such as:
-- creating and odifying own account with personal informations
-- sending messages to other users
-- creating friendship relations
-- posting
-- checking profile of others
-- scrolling main site with posts of friends
-- searching other users
 
 # Technologies
 
@@ -68,7 +66,8 @@ Implemented forms to standard register and login procedures.
 
 ## User profile and editing
 
-User can easly edit his profile. He can change password or other personal information. There is also form to uploading new profile photos.
+The user can easily edit his/her profile. For instance, he or she can change passwords or other personal information. 
+Moreover, there is also a form which enables uploading new profile photos.
 
 ![](https://res.cloudinary.com/dlio1dtmu/image/upload/v1597961115/edit_profile_s3iji7.gif)
 
@@ -84,13 +83,14 @@ User can easly create new post. With the "infinite scroll" he can also easly bro
 
 ## User searching and sending "friend" invitation
 
-User can search for others using created search engine. He can send them invitation. He can also preview his current friends or invitation sent to him and by him.
+The user can search for others by means of the search engine. He or she can send them invitations. What is more, he or she can also preview invitations sent to and by him/her. He or she can always see people that currently belong to his/her community of friends.
 
 ![](https://res.cloudinary.com/dlio1dtmu/image/upload/v1597961115/friend_search_nhxkhz.gif)
 
 ## Texting users
 
-Provided functionality of texting users. Again used infinite scroll for efficiency-focused approach
+Another functionality provides texting other users. Again, the use of infinite scroll  is dedicated to the efficiency-focused approach.
+
 
 ![](https://res.cloudinary.com/dlio1dtmu/image/upload/v1597961466/message_n5crqf.png)
 
