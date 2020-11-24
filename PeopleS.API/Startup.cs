@@ -40,7 +40,7 @@ namespace PeopleS.API
             services.AddCors();
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
             services.AddScoped<IPeopleSRepository, PeopleSRepository>();
-            services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IAuthRepository, AuthRepositoryDapper>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer( options => {
                 options.TokenValidationParameters = new TokenValidationParameters() {
                     ValidateIssuerSigningKey = true,
